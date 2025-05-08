@@ -56,7 +56,11 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* background */}
-      <img
+      <img404: NOT_FOUND
+Code: NOT_FOUND
+ID: sin1::wctts-1746711026455-e4d678e2d00b
+
+Read our documentation to learn more about this error.
         src="/2.svg"
         alt="Educational forest background with children"
         className="absolute inset-0 h-full w-full object-cover"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export default function Home() {
-  /* ───── state utama ───── */
+  // ───── state utama ─────
   const [isHovered, setIsHovered] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
@@ -11,10 +11,10 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({ name: "", absentNumber: "" });
 
-  /* ───── handler tombol MULAI (munculkan form) ───── */
+  // ───── handler tombol MULAI (munculkan form) ─────
   const handleStartClick = () => setShowForm(true);
 
-  /* ───── validasi sederhana ───── */
+  // ───── validasi sederhana ─────
   const validateForm = () => {
     const newErrors = { name: "", absentNumber: "" };
     let ok = true;
@@ -36,7 +36,7 @@ export default function Home() {
     return ok;
   };
 
-  /* ───── submit form ───── */
+  // ───── submit form ─────
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -52,15 +52,11 @@ export default function Home() {
     }, 800);
   };
 
-  /* ───── UI ───── */
+  // ───── UI ─────
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* background */}
-      <img404: NOT_FOUND
-Code: NOT_FOUND
-ID: sin1::wctts-1746711026455-e4d678e2d00b
-
-Read our documentation to learn more about this error.
+      <img
         src="/2.svg"
         alt="Educational forest background with children"
         className="absolute inset-0 h-full w-full object-cover"
@@ -83,7 +79,7 @@ Read our documentation to learn more about this error.
         {/* form atau tombol */}
         {showForm ? (
           <div className="mb-24 w-full max-w-md rounded-lg bg-white/90 p-6 shadow-xl backdrop-blur-sm">
-            <h2 className="mb-4 text-center text-2xl text-green-800">Masukkan Identitas</h2>
+            <h2 className="mb-4 text-center text-2xl text-green-800">Masukkan Identitas</h2>
 
             <form onSubmit={handleSubmit}>
               {/* nama */}
@@ -103,7 +99,7 @@ Read our documentation to learn more about this error.
 
               {/* nomor absen */}
               <div className="mb-6">
-                <span className="block text-lg font-medium">Nomor Absen</span>
+                <span className="block text-lg font-medium">Nomor Absen</span>
                 <input
                   id="absentNumber"
                   value={absentNumber}
@@ -123,25 +119,27 @@ Read our documentation to learn more about this error.
                 disabled={isSubmitting}
                 className="w-full rounded-md bg-green-600 py-3 font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? "Memproses…" : "Mulai Quiz"}
+                {isSubmitting ? "Memproses…" : "Mulai Quiz"}
               </button>
             </form>
           </div>
         ) : (
-          /* tombol awal */
-          <div
-            className="mb-24 transform transition-transform duration-300"
-            style={{ transform: isHovered ? "translateY(-5px)" : "translateY(0)" }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <button
-              onClick={handleStartClick}
-              className="h-16 w-48 rounded-xl border-2 border-amber-400 bg-amber-300 text-xl font-bold text-green-900 shadow-lg transition-all duration-200 hover:scale-105 hover:bg-amber-400"
+          <>
+            {/* tombol awal */}
+            <div
+              className="mb-24 transform transition-transform duration-300"
+              style={{ transform: isHovered ? "translateY(-5px)" : "translateY(0)" }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              MULAI
-            </button>
-          </div>
+              <button
+                onClick={handleStartClick}
+                className="h-16 w-48 rounded-xl border-2 border-amber-400 bg-amber-300 text-xl font-bold text-green-900 shadow-lg transition-all duration-200 hover:scale-105 hover:bg-amber-400"
+              >
+                MULAI
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

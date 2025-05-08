@@ -57,7 +57,7 @@ export default function Home() {
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* background */}
       <img
-        src="./public/2.svg"
+        src="/2.svg"
         alt="Educational forest background with children"
         className="absolute inset-0 h-full w-full object-cover"
       />

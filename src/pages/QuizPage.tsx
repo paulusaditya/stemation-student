@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { questions } from "../database/questions";
 
@@ -8,6 +8,8 @@ interface Option {
 }
 
 interface Question {
+  id: number;
+  session: "pretest" | "materi1" | "materi2" | "materi3" | "posttest";
   question: string;
   options: Option[];
   correct: string;
@@ -26,8 +28,21 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [absent, setAbsent] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<number>(1200); // 20 menit
+  const [timeLeft, setTimeLeft] = useState<number>(1200);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
+  const lastSessionAlert = useRef<Question["session"] | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const getSessionLabel = (session: Question["session"]) => {
+    switch (session) {
+      case "pretest": return "📘 Pretest";
+      case "materi1": return "📗 Materi 1";
+      case "materi2": return "📙 Materi 2";
+      case "materi3": return "📕 Materi 3";
+      case "posttest": return "📝 Post-test";
+      default: return "";
+    }
+  };
 
   useEffect(() => {
     const n = localStorage.getItem("userName");
@@ -39,35 +54,48 @@ export default function QuizPage() {
     setName(n);
     setAbsent(a);
 
-    // Acak soal dan opsi
-    const randomized = shuffleArray(questions).map((q) => ({
+    const grouped = (session: Question["session"], count: number) =>
+      shuffleArray(questions.filter(q => q.session === session)).slice(0, count);
+
+    const randomized = [
+      ...grouped("pretest", 5),
+      ...grouped("materi1", 10),
+      ...grouped("materi2", 10),
+      ...grouped("materi3", 10),
+      ...grouped("posttest", 5),
+    ].map(q => ({
       ...q,
       options: shuffleArray(q.options),
     }));
+
     setShuffledQuestions(randomized);
   }, [navigate]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
+    timerRef.current = setInterval(() => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
-          clearInterval(timer);
+          clearInterval(timerRef.current!);
           handleFinish();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-    return () => clearInterval(timer);
+    return () => clearInterval(timerRef.current!);
   }, []);
 
-  const formatTime = (seconds: number): string => {
-    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
-    const s = String(seconds % 60).padStart(2, "0");
-    return `${m}:${s}`;
+  useEffect(() => {
+    setSelected(answers[current] || "");
+  }, [current, answers]);
+
+  const formatTime = (s: number) => {
+    const m = String(Math.floor(s / 60)).padStart(2, "0");
+    const sec = String(s % 60).padStart(2, "0");
+    return `${m}:${sec}`;
   };
 
-  const submitQuizResult = async (finalScore: number): Promise<void> => {
+  const submitQuizResult = async (percentage: number) => {
     try {
       const res = await fetch("http://localhost:5000/results", {
         method: "POST",
@@ -75,24 +103,22 @@ export default function QuizPage() {
         body: JSON.stringify({
           nama: name,
           absen: Number(absent),
-          score: finalScore,
+          score: percentage,
         }),
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal submit");
       console.log("✅ Tersimpan:", data.data);
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
-        console.error(err.message);
         alert("Gagal menyimpan hasil. Coba lagi nanti.");
       }
     }
   };
 
-  const handleFinish = (): void => {
+  const handleFinish = () => {
     const correctAnswers = Object.entries(answers).filter(
-      ([index, answer]) => answer === shuffledQuestions[Number(index)].correct
+      ([idx, val]) => val === shuffledQuestions[Number(idx)].correct
     );
     const finalScore = correctAnswers.length;
     const percentage = Math.round((finalScore / shuffledQuestions.length) * 100);
@@ -101,59 +127,62 @@ export default function QuizPage() {
     submitQuizResult(percentage);
   };
 
-  const next = (): void => {
+  // alert sesi hanya sekali per sesi baru
+  const next = () => {
     if (current < shuffledQuestions.length - 1) {
-      setCurrent(current + 1);
+      const nextIndex = current + 1;
+      const currentSession = shuffledQuestions[current].session;
+      const nextSession = shuffledQuestions[nextIndex].session;
+
+      setCurrent(nextIndex);
+
+      if (currentSession !== nextSession && lastSessionAlert.current !== nextSession) {
+        alert(`Sesi ${getSessionLabel(nextSession)} dimulai`);
+        lastSessionAlert.current = nextSession;
+      }
     } else {
       handleFinish();
     }
   };
 
-  const previous = (): void => {
-    if (current > 0) setCurrent(current - 1);
+  const previous = () => current > 0 && setCurrent(current - 1);
+
+  const selectAnswer = (val: string) => {
+    setSelected(val);
+    setAnswers(prev => ({ ...prev, [current]: val }));
   };
 
-  const selectAnswer = (value: string): void => {
-    setSelected(value);
-    setAnswers({ ...answers, [current]: value });
-  };
-
-  const restart = (): void => {
+  const restart = () => {
     setCurrent(0);
     setSelected("");
     setAnswers({});
     setScore(0);
     setShowResult(false);
     setTimeLeft(1200);
-    const reshuffled = shuffleArray(questions).map((q) => ({
-      ...q,
-      options: shuffleArray(q.options),
-    }));
-    setShuffledQuestions(reshuffled);
+    lastSessionAlert.current = null;
+    // Reset timer manually
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current!);
+          handleFinish();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
-  useEffect(() => {
-    setSelected(answers[current] || "");
-  }, [current, answers]);
-
   if (!name || !absent || shuffledQuestions.length === 0)
-    return (
-      <div className="flex h-screen items-center justify-center">Loading…</div>
-    );
+    return <div className="flex h-screen items-center justify-center">Loading…</div>;
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      <img
-        src="/1.svg"
-        alt="Forest background"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-
-      <header className="relative z-20 mt-13 text-center">
+      <img src="/1.svg" className="absolute inset-0 h-full w-full object-cover" alt="background" />
+      <header className="relative z-20 mt-8 text-center">
         <h1 className="text-3xl font-extrabold text-green-900">STEMation Quiz</h1>
-        <p className="mt-1 font-medium text-white drop-shadow">
-          Nama: {name} | Nomor Absen: {absent}
-        </p>
+        <p className="mt-1 text-white drop-shadow">Nama: {name} | Absen: {absent}</p>
         <p className="text-red-600 font-bold mt-1">Waktu Tersisa: {formatTime(timeLeft)}</p>
       </header>
 
@@ -164,10 +193,9 @@ export default function QuizPage() {
               key={index}
               onClick={() => setCurrent(index)}
               className={`w-8 h-8 rounded-full font-bold text-sm ${
-                answers[index]
-                  ? "bg-green-500 text-white"
-                  : "bg-white text-gray-700"
+                answers[index] ? "bg-green-500 text-white" : "bg-white text-gray-700"
               } ${index === current ? "ring-2 ring-yellow-400" : ""}`}
+              aria-label={`Soal nomor ${index + 1}`}
             >
               {index + 1}
             </button>
@@ -178,38 +206,28 @@ export default function QuizPage() {
           <div className="h-[550px] w-full bg-transparent px-6 py-8">
             <div className="flex h-full w-full flex-col items-center justify-start">
               {showResult ? (
-                <div className="w-full h-[550px] rounded-lg bg-transparent p-8 flex flex-col items-center justify-center">
-                  <h2 className="mb-1 text-center text-2xl font-semibold text-white">
-                    Hasil Quiz
-                  </h2>
-                  <p className="mb-6 text-center text-white">
-                    Anda telah menyelesaikan quiz!
-                  </p>
-                  <p className="mb-2 text-center text-4xl font-bold text-white">
+                <div className="w-full h-[550px] p-8 flex flex-col items-center justify-center">
+                  <h2 className="text-2xl font-semibold text-white">Hasil Quiz</h2>
+                  <p className="text-white mb-2">Anda telah menyelesaikan quiz!</p>
+                  <p className="text-4xl font-bold text-white mb-2">
                     {score} / {shuffledQuestions.length}
                   </p>
-                  <p className="mb-6 text-center text-white">
+                  <p className="text-white mb-6">
                     Nilai: {Math.round((score / shuffledQuestions.length) * 100)}%
                   </p>
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={restart}
-                      className="rounded-md border border-white px-6 py-2 font-semibold text-white hover:bg-white/10"
-                    >
+                  <div className="flex gap-4">
+                    <button onClick={restart} className="border px-6 py-2 text-white hover:bg-white/10">
                       Ulangi Quiz
                     </button>
-                    <button
-                      onClick={() => navigate("/")}
-                      className="rounded-md bg-emerald-500 px-6 py-2 font-semibold text-white hover:bg-emerald-600"
-                    >
+                    <button onClick={() => navigate("/")} className="bg-emerald-500 px-6 py-2 text-white hover:bg-emerald-600">
                       Beranda
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="mt-2 w-full h-[550px] max-w-[900px] rounded-lg bg-transparent p-8">
-                  <h2 className="mb-2 text-2xl font-medium text-white">
-                    Pertanyaan {current + 1} / {shuffledQuestions.length}
+                <div className="w-full h-[550px] rounded-lg bg-transparent p-8">
+                  <h2 className="text-2xl font-medium text-white">
+                    {getSessionLabel(shuffledQuestions[current].session)} | Soal {current + 1} / {shuffledQuestions.length}
                   </h2>
 
                   <p className='mb-6 text-center text-white text-2xl font-["Coming Soon",cursive] drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]'>
@@ -217,13 +235,11 @@ export default function QuizPage() {
                   </p>
 
                   <form className="space-y-3">
-                    {shuffledQuestions[current].options.map((opt) => (
+                    {shuffledQuestions[current].options.map(opt => (
                       <label
                         key={opt.id}
                         className={`flex cursor-pointer items-center rounded-lg border p-3 transition-colors ${
-                          selected === opt.id
-                            ? "border-green-300 bg-white/10"
-                            : "border-white/40 hover:bg-white/5"
+                          selected === opt.id ? "border-green-300 bg-white/10" : "border-white/40 hover:bg-white/5"
                         }`}
                       >
                         <input
@@ -231,7 +247,7 @@ export default function QuizPage() {
                           name="answer"
                           value={opt.id}
                           checked={selected === opt.id}
-                          onChange={(e) => selectAnswer(e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => selectAnswer(e.target.value)}
                           className="mr-3 h-4 w-4 accent-emerald-400"
                         />
                         <span className="text-white">{opt.text}</span>
@@ -243,14 +259,14 @@ export default function QuizPage() {
                     <button
                       onClick={previous}
                       disabled={current === 0}
-                      className="w-full rounded-md bg-gray-300 py-3 font-semibold text-gray-700 hover:bg-gray-400 disabled:opacity-50"
+                      className="w-full rounded-md bg-gray-300 py-3 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
                     >
                       Sebelumnya
                     </button>
                     <button
                       onClick={next}
                       disabled={!selected}
-                      className="w-full rounded-md bg-emerald-500 py-3 font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="w-full rounded-md bg-emerald-500 py-3 text-white hover:bg-emerald-600 disabled:opacity-50"
                     >
                       {current === shuffledQuestions.length - 1 ? "Selesai" : "Selanjutnya"}
                     </button>

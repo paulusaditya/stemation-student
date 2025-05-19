@@ -13,7 +13,6 @@ export default function Home() {
   const [errors, setErrors] = useState({ name: "", absentNumber: "" });
 
   const handleStartClick = () => setShowForm(true);
-  const handleMateriClick = () => navigate("/materi");
 
   const validateForm = () => {
     const newErrors = { name: "", absentNumber: "" };

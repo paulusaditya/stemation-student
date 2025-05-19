@@ -1,20 +1,20 @@
-"use client";
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  // ───── state utama ─────
+  const navigate = useNavigate();
+
   const [isHovered, setIsHovered] = useState(false);
+  const [isHoveredMateri, setIsHoveredMateri] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [absentNumber, setAbsentNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({ name: "", absentNumber: "" });
 
-  // ───── handler tombol MULAI (munculkan form) ─────
   const handleStartClick = () => setShowForm(true);
+  const handleMateriClick = () => navigate("/materi");
 
-  // ───── validasi sederhana ─────
   const validateForm = () => {
     const newErrors = { name: "", absentNumber: "" };
     let ok = true;
@@ -36,7 +36,6 @@ export default function Home() {
     return ok;
   };
 
-  // ───── submit form ─────
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -46,25 +45,19 @@ export default function Home() {
     setTimeout(() => {
       localStorage.setItem("userName", name);
       localStorage.setItem("userAbsentNumber", absentNumber);
-
-      // redirect ke halaman quiz
-      window.location.href = "/quiz";
+      navigate("/quiz");
     }, 800);
   };
 
-  // ───── UI ─────
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* background */}
       <img
         src="/2.svg"
-        alt="Educational forest background with children"
+        alt="Educational forest background"
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* konten */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-between p-6">
-        {/* judul */}
         <header className="pt-8 text-center">
           <h1
             className="text-5xl font-bold text-green-900 drop-shadow-lg md:text-6xl lg:text-7xl"
@@ -76,17 +69,16 @@ export default function Home() {
 
         <div className="flex-grow" />
 
-        {/* form atau tombol */}
         {showForm ? (
           <div className="mb-24 w-full max-w-md rounded-lg bg-white/90 p-6 shadow-xl backdrop-blur-sm">
-            <h2 className="mb-4 text-center text-2xl text-green-800">Masukkan Identitas</h2>
+            <h2 className="mb-4 text-center text-2xl text-green-800">
+              Masukkan Identitas
+            </h2>
 
             <form onSubmit={handleSubmit}>
-              {/* nama */}
               <div className="mb-4">
                 <span className="block text-lg font-medium">Nama</span>
                 <input
-                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Masukkan nama lengkap"
@@ -94,14 +86,14 @@ export default function Home() {
                     errors.name ? "border-red-500" : "border-gray-300"
                   }`}
                 />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                )}
               </div>
 
-              {/* nomor absen */}
               <div className="mb-6">
                 <span className="block text-lg font-medium">Nomor Absen</span>
                 <input
-                  id="absentNumber"
                   value={absentNumber}
                   onChange={(e) => setAbsentNumber(e.target.value)}
                   placeholder="Masukkan nomor absen"
@@ -110,7 +102,9 @@ export default function Home() {
                   }`}
                 />
                 {errors.absentNumber && (
-                  <p className="mt-1 text-sm text-red-500">{errors.absentNumber}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.absentNumber}
+                  </p>
                 )}
               </div>
 
@@ -122,13 +116,23 @@ export default function Home() {
                 {isSubmitting ? "Memproses…" : "Mulai Quiz"}
               </button>
             </form>
+            {/* Tombol batal/kembali */}
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="mt-4 w-full rounded-md border border-gray-400 bg-gray-100 py-3 font-semibold text-gray-700 hover:bg-gray-200"
+            >
+              Batal
+            </button>
           </div>
         ) : (
           <>
-            {/* tombol awal */}
+            {/* Tombol MULAI */}
             <div
-              className="mb-24 transform transition-transform duration-300"
-              style={{ transform: isHovered ? "translateY(-5px)" : "translateY(0)" }}
+              className="mb-4 transform transition-transform duration-300"
+              style={{
+                transform: isHovered ? "translateY(-5px)" : "translateY(0)",
+              }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -138,6 +142,42 @@ export default function Home() {
               >
                 MULAI
               </button>
+            </div>
+
+            {/* Dropdown MATERI */}
+            <div className="relative mb-40">
+              <div
+                onMouseEnter={() => setIsHoveredMateri(true)}
+                onMouseLeave={() => setIsHoveredMateri(false)}
+                className="relative inline-block text-left"
+              >
+                <button className="h-16 w-48 rounded-xl border-2 border-blue-400 bg-blue-300 text-xl font-bold text-green-900 shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-400">
+                  MATERI
+                </button>
+
+                {isHoveredMateri && (
+                  <div className="absolute left-0 mt-2 w-48 rounded-md border border-blue-200 bg-white shadow-lg z-50">
+                    <button
+                      onClick={() => navigate("/materi/1")}
+                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
+                    >
+                      Materi 1 : Suhu
+                    </button>
+                    <button
+                      onClick={() => navigate("/materi/2")}
+                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
+                    >
+                      Materi 2 : Kalor
+                    </button>
+                    <button
+                      onClick={() => navigate("/materi/3")}
+                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
+                    >
+                      Materi 3 : Pemuaian
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}

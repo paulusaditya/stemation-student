@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <img
-        src="/2.png"
+        src="/1fix.png"
         alt="Educational forest background"
         className="absolute inset-0 h-full w-full object-cover"
       />

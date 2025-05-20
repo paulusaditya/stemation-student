@@ -179,7 +179,7 @@ export default function QuizPage() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      <img src="/1fix.png" className="absolute inset-0 h-full w-full object-cover" alt="background" />
+      <img src="/2.png" className="absolute inset-0 h-full w-full object-cover" alt="background" />
       <header className="relative z-20 mt-8 text-center">
         <h1 className="text-3xl font-extrabold text-green-900">STEMation Quiz</h1>
         <p className="mt-1 text-white drop-shadow">Nama: {name} | Absen: {absent}</p>

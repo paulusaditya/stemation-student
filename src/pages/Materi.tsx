@@ -18,7 +18,7 @@ export default function Materi() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <img
-        src="/1.svg"
+        src="/1fix.png"
         alt="Forest background"
         className="absolute inset-0 h-full w-full object-cover"
       />

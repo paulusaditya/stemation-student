@@ -26,8 +26,8 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number>(0);
   const [showResult, setShowResult] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
-  const [absent, setAbsent] = useState<string>("");
+  const [nama, setName] = useState<string>("");
+  const [absen, setAbsent] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(1200);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const lastSessionAlert = useRef<Question["session"] | null>(null);
@@ -101,8 +101,8 @@ export default function QuizPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nama: name,
-          absen: Number(absent),
+          nama: nama,
+          absen: Number(absen),
           score: percentage,
         }),
       });

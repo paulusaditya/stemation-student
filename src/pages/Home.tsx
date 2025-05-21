@@ -51,19 +51,19 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <img
-        src="/1fix.png"
+        src="/1.png"
         alt="Educational forest background"
         className="absolute inset-0 h-full w-full object-cover"
       />
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-between p-6">
         <header className="pt-8 text-center">
-          {/* <h1
+          <h1
             className="text-5xl font-bold text-green-900 drop-shadow-lg md:text-6xl lg:text-7xl"
             style={{ textShadow: "2px 2px 4px rgba(255,255,255,.7)" }}
           >
             STEMation
-          </h1> */}
+          </h1>
         </header>
 
         <div className="flex-grow" />

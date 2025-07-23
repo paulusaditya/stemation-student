@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Materi from "./pages/Materi";
 import QuizPage from "./pages/QuizPage";
+import MenuPage from "./pages/MenuPage";
 
 export default function App() {
   return (
@@ -14,7 +15,7 @@ export default function App() {
               <QuizPage />
           }
         />
-        <Route path="/materi/:id" element={<Materi />} />
+        <Route path="/menu" element={< MenuPage/>} />
       </Routes>
     </BrowserRouter>
   );

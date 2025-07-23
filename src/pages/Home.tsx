@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <img
-        src="/1.png"
+        src="/fix.png"
         alt="Educational forest background"
         className="absolute inset-0 h-full w-full object-cover"
       />
@@ -143,40 +143,23 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Dropdown MATERI */}
-            <div className="relative mb-40">
-              <div
-                onMouseEnter={() => setIsHoveredMateri(true)}
-                onMouseLeave={() => setIsHoveredMateri(false)}
-                className="relative inline-block text-left"
+            {/* Button Menu */}
+            <div
+              className="mb-24 transform transition-transform duration-300"
+              style={{
+                transform: isHoveredMateri
+                  ? "translateY(-5px)"
+                  : "translateY(0)",
+              }}
+              onMouseEnter={() => setIsHoveredMateri(true)}
+              onMouseLeave={() => setIsHoveredMateri(false)}
+            >
+              <button
+                onClick={() => navigate("/menu")}
+                className="h-16 w-48 rounded-xl border-2 border-blue-400 bg-blue-300 text-xl font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-400"
               >
-                <button className="h-16 w-48 rounded-xl border-2 border-blue-400 bg-blue-300 text-xl font-bold text-green-900 shadow-lg transition-all duration-200 hover:scale-105 hover:bg-blue-400">
-                  MATERI
-                </button>
-
-                {isHoveredMateri && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-md border border-blue-200 bg-white shadow-lg z-50">
-                    <button
-                      onClick={() => navigate("/materi/1")}
-                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
-                    >
-                      Materi 1 : Suhu
-                    </button>
-                    <button
-                      onClick={() => navigate("/materi/2")}
-                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
-                    >
-                      Materi 2 : Kalor
-                    </button>
-                    <button
-                      onClick={() => navigate("/materi/3")}
-                      className="block w-full px-4 py-2 text-left text-green-800 hover:bg-blue-100"
-                    >
-                      Materi 3 : Pemuaian
-                    </button>
-                  </div>
-                )}
-              </div>
+                MENU
+              </button>
             </div>
           </>
         )}

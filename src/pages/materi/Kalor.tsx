@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Kalor = () => {
   // Array berisi path gambar slide materi kalor

@@ -3,8 +3,8 @@ import Home from "./pages/Home";
 import MenuPage from "./pages/MenuPage";
 import PretestPage from "./pages/PretestPage";
 import Materi from "./pages/Materi";
-import Suhu from "./pages/materi/suhu";
-import Kalor from "./pages/materi/kalor";
+import Suhu from "./pages/materi/Suhu";
+import Kalor from "./pages/materi/Kalor";
 
 export default function App() {
   return (

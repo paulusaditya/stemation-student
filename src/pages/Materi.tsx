@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Materi = () => {
   const handleMateriClick = (materi: string) => {
     window.location.href = `/materi/${materi}`;

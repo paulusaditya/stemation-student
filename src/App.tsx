@@ -7,6 +7,7 @@ import Suhu from "./pages/materi/Suhu";
 import Kalor from "./pages/materi/Kalor";
 import Pemuaian from "./pages/materi/Pemuaian";
 import Refleksi from "./pages/Refleksi";
+import PosttestPage from "./pages/PosttestPage";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/materi/kalor" element={<Kalor />} />
         <Route path="/materi/pemuaian" element={<Pemuaian />} />
         <Route path="/refleksi" element={<Refleksi />} />
+        <Route path="/posttest" element={<PosttestPage />} />
       </Routes>
     </BrowserRouter>
   );

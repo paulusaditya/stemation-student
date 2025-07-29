@@ -494,7 +494,7 @@ export default function PretestPage() {
 
       <div className="relative z-20 mx-auto mt-4 w-[900px] max-w-[90%]">
         {/* Debug Panel */}
-        {/* {debugInfo.length > 0 && (
+        {debugInfo.length > 0 && (
           <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-white font-semibold">🔍 Debug Info</h3>
@@ -511,7 +511,7 @@ export default function PretestPage() {
               ))}
             </div>
           </div>
-        )} */}
+        )}
 
         {/* Question Navigation */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">

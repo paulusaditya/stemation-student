@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 const mockQuestions = [
   {
     id: 1,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Termometer apa yang paling cocok digunakan untuk mengukur suhu di tempat yang sangat dingin, seperti di kutub?",
     options: [
       { id: "a", text: "Termometer Klinis" },
@@ -16,7 +16,7 @@ const mockQuestions = [
   },
   {
     id: 2,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Suhu air mendidih adalah 100°C. Jika diukur dengan termometer Fahrenheit, berapa suhu itu?",
     options: [
       { id: "a", text: "180° F" },
@@ -28,7 +28,7 @@ const mockQuestions = [
   },
   {
     id: 3,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Sebuah benda menyerap kalor sebanyak 8.400 Joule. Massa benda 0,5 kg dan kalor jenisnya 420 J/kg°C. Berapa kenaikan suhu benda tersebut?",
     options: [
       { id: "a", text: "10° C" },
@@ -40,7 +40,7 @@ const mockQuestions = [
   },
   {
     id: 4,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Seorang siswa memanaskan logam dan mencatat bahwa panjangnya bertambah 1,5 cm. Tapi menurut perhitungan, seharusnya hanya bertambah 1,0 cm. Apa yang sebaiknya dilakukan?",
     options: [
       { id: "a", text: "Mengganti Logam yang digunakan" },
@@ -52,7 +52,7 @@ const mockQuestions = [
   },
   {
     id: 5,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Saat membuat laporan percobaan mengukur suhu air, apa yang sebaiknya ditulis lebih dulu?",
     options: [
       { id: "a", text: "Grafik Hasil Pengamatan" },
@@ -64,7 +64,7 @@ const mockQuestions = [
   },
   {
     id: 6,
-    session: "pretest" as const,
+    session: "posttest" as const,
     question: "Kamu menghitung hasil pemuaian panjang logam dan hasilnya salah. Apa yang harus kamu lakukan?",
     options: [
       { id: "a", text: "Dibiarkan saja karena perbedaannya kecil" },
@@ -93,7 +93,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return [...array].sort(() => Math.random() - 0.5);
 }
 
-export default function PretestPage() {
+export default function PosttestPage() {
   // Form states
   const [showForm, setShowForm] = useState(true);
   const [username, setUsername] = useState("");
@@ -363,7 +363,7 @@ export default function PretestPage() {
             STEMation Quiz
           </h1>
           <h2 className="text-3xl font-bold text-yellow-300 drop-shadow-lg">
-            📘 Pretest - Data Peserta
+            📘 Posttest - Data Peserta
           </h2>
         </div>
 
@@ -377,7 +377,7 @@ export default function PretestPage() {
                 Masukkan Data Anda
               </h3>
               <p className="text-gray-600">
-                Silakan isi data di bawah ini untuk memulai pretest
+                Silakan isi data di bawah ini untuk memulai Posttest
               </p>
             </div>
 
@@ -456,7 +456,7 @@ export default function PretestPage() {
                       Memulai...
                     </div>
                   ) : (
-                    "Mulai Pretest →"
+                    "Mulai Posttest →"
                   )}
                 </button>
               </div>
@@ -467,11 +467,11 @@ export default function PretestPage() {
                 <span className="text-blue-500 mr-3 mt-1 text-xl">ℹ️</span>
                 <div>
                   <h4 className="text-base font-bold text-blue-800 mb-2">
-                    Informasi Pretest
+                    Informasi Posttest
                   </h4>
                   <div className="text-sm text-blue-700 space-y-1">
                     <div>• Waktu pengerjaan: 10 menit</div>
-                    <div>• Jumlah soal: 6 soal pretest</div>
+                    <div>• Jumlah soal: 6 soal Posttest</div>
                     <div>• Data akan tersimpan otomatis setelah selesai</div>
                   </div>
                 </div>
@@ -494,7 +494,7 @@ export default function PretestPage() {
 
       <div className="relative z-20 mx-auto mt-4 w-[900px] max-w-[90%]">
         {/* Debug Panel */}
-        {/* {debugInfo.length > 0 && (
+        {debugInfo.length > 0 && (
           <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-white font-semibold">🔍 Debug Info</h3>
@@ -511,7 +511,7 @@ export default function PretestPage() {
               ))}
             </div>
           </div>
-        )} */}
+        )}
 
         {/* Question Navigation */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -534,8 +534,8 @@ export default function PretestPage() {
               {showResult ? (
                 <div className="w-full h-[550px] p-8 flex flex-col items-center justify-center text-center">
                   <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30">
-                    <h2 className="text-3xl font-bold text-white mb-4">🎉 Hasil Pretest</h2>
-                    <p className="text-white mb-4 text-lg">Selamat! Anda telah menyelesaikan pretest!</p>
+                    <h2 className="text-3xl font-bold text-white mb-4">🎉 Hasil Posttest</h2>
+                    <p className="text-white mb-4 text-lg">Selamat! Anda telah menyelesaikan Posttest!</p>
                     <div className="text-6xl font-bold text-yellow-300 mb-4">
                       {score} / {questions.length}
                     </div>
@@ -547,7 +547,7 @@ export default function PretestPage() {
                         onClick={restartQuiz} 
                         className="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-xl text-white font-semibold transition-all border border-white/30"
                       >
-                        🔄 Ulangi Pretest
+                        🔄 Ulangi posttest
                       </button>
                       <button 
                         onClick={() => window.location.href = '/menu'} 
@@ -561,7 +561,7 @@ export default function PretestPage() {
               ) : (
                 <div className="w-full h-[550px] p-8">
                   <h2 className="text-2xl font-medium text-white mb-2">
-                    📘 Pretest | Soal {current + 1} / {questions.length}
+                    📘 posttest | Soal {current + 1} / {questions.length}
                   </h2>
 
                   <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">

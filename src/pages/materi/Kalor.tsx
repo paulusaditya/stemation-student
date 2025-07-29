@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Kalor = () => {
   // Array berisi path gambar slide materi kalor
-  const slides = Array.from({ length: 22 }, (_, i) => `/kalor/${i + 59}.png`);
+  const slides = Array.from({ length: 39 }, (_, i) => `/kalor/${i + 60}.png`);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 

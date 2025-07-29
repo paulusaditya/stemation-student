@@ -114,6 +114,15 @@ export default function PretestPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Debug states
+  const [debugInfo, setDebugInfo] = useState<string[]>([]);
+  
+  const addDebugInfo = (info: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setDebugInfo(prev => [...prev, `[${timestamp}] ${info}`]);
+    console.log(`[DEBUG ${timestamp}] ${info}`);
+  };
+
   const validateForm = () => {
     const newErrors = {
       username: "",
@@ -141,22 +150,37 @@ export default function PretestPage() {
   const startQuiz = async () => {
     if (validateForm()) {
       setIsLoading(true);
+      addDebugInfo("Memulai quiz...");
+      
       try {
-        // Send data to backend
+        // PERBAIKAN: Hanya kirim data yang sesuai dengan database schema
+        const startPayload = {
+          nama: username.trim(),
+          absen: Number(absentNumber.trim()),
+          score: 0  // Skor awal
+        };
+        
+        addDebugInfo(`Mengirim data awal: ${JSON.stringify(startPayload)}`);
+        
         const response = await fetch("https://stemation-backend.vercel.app/api/results", {
           method: "POST",
           headers: { 
             "Content-Type": "application/json" 
           },
-          body: JSON.stringify({
-            nama: username.trim(),
-            absen: Number(absentNumber.trim()),
-            score: 0,
-            status: "started"
-          }),
+          body: JSON.stringify(startPayload),
         });
 
-        // Initialize quiz regardless of backend response
+        addDebugInfo(`Response status: ${response.status} - ${response.statusText}`);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          addDebugInfo(`Error response: ${errorText}`);
+        } else {
+          const responseData = await response.json();
+          addDebugInfo(`Success response: ${JSON.stringify(responseData)}`);
+        }
+
+        // Initialize quiz
         const shuffledQuestions = shuffleArray([...mockQuestions]).map(q => ({
           ...q,
           options: shuffleArray(q.options),
@@ -164,6 +188,7 @@ export default function PretestPage() {
         
         setQuestions(shuffledQuestions);
         setShowForm(false);
+        addDebugInfo("Quiz dimulai, timer diaktifkan");
         
         // Start timer
         timerRef.current = setInterval(() => {
@@ -176,15 +201,11 @@ export default function PretestPage() {
             return prev - 1;
           });
         }, 1000);
-
-        if (response.ok) {
-          console.log("✅ Data berhasil dikirim ke backend");
-        } else {
-          console.warn("⚠️ Backend error, but quiz continues");
-        }
         
       } catch (error) {
+        addDebugInfo(`Network error: ${error}`);
         console.error("❌ Network error:", error);
+        
         // Still start quiz even if backend fails
         const shuffledQuestions = shuffleArray([...mockQuestions]).map(q => ({
           ...q,
@@ -213,21 +234,33 @@ export default function PretestPage() {
 
   const submitQuizResult = async (percentage: number) => {
     try {
+      // PERBAIKAN: Gunakan PUT/PATCH untuk update, bukan POST baru
+      const updatePayload = {
+        nama: username.trim(),
+        absen: Number(absentNumber.trim()),
+        score: percentage,
+      };
+      
+      addDebugInfo(`Mengirim hasil akhir: ${JSON.stringify(updatePayload)}`);
+      
       const response = await fetch("https://stemation-backend.vercel.app/api/results", {
-        method: "POST",
+        method: "POST", // Mungkin perlu diubah ke PUT atau PATCH
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nama: username,
-          absen: Number(absentNumber),
-          score: percentage,
-        }),
+        body: JSON.stringify(updatePayload),
       });
+      
+      addDebugInfo(`Final submit status: ${response.status} - ${response.statusText}`);
       
       if (response.ok) {
         const data = await response.json();
-        console.log("✅ Hasil tersimpan:", data.data);
+        addDebugInfo(`Final result saved: ${JSON.stringify(data)}`);
+        console.log("✅ Hasil tersimpan:", data);
+      } else {
+        const errorText = await response.text();
+        addDebugInfo(`Final submit error: ${errorText}`);
       }
     } catch (err) {
+      addDebugInfo(`Final submit network error: ${err}`);
       console.error("❌ Gagal menyimpan hasil:", err);
     }
   };
@@ -242,6 +275,8 @@ export default function PretestPage() {
     );
     const finalScore = correctAnswers.length;
     const percentage = Math.round((finalScore / questions.length) * 100);
+    
+    addDebugInfo(`Quiz selesai. Skor: ${finalScore}/${questions.length} (${percentage}%)`);
     
     setScore(finalScore);
     setShowResult(true);
@@ -290,6 +325,7 @@ export default function PretestPage() {
     setTimeLeft(600);
     setUsername("");
     setAbsentNumber("");
+    setDebugInfo([]);
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -435,7 +471,7 @@ export default function PretestPage() {
                   </h4>
                   <div className="text-sm text-blue-700 space-y-1">
                     <div>• Waktu pengerjaan: 10 menit</div>
-                    <div>• Jumlah soal: 5 soal pretest</div>
+                    <div>• Jumlah soal: 6 soal pretest</div>
                     <div>• Data akan tersimpan otomatis setelah selesai</div>
                   </div>
                 </div>
@@ -457,6 +493,26 @@ export default function PretestPage() {
       </header>
 
       <div className="relative z-20 mx-auto mt-4 w-[900px] max-w-[90%]">
+        {/* Debug Panel */}
+        {debugInfo.length > 0 && (
+          <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-white font-semibold">🔍 Debug Info</h3>
+              <button
+                onClick={() => setDebugInfo([])}
+                className="text-white/70 hover:text-white text-sm"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="max-h-32 overflow-y-auto text-xs text-white/80 space-y-1">
+              {debugInfo.map((info, idx) => (
+                <div key={idx} className="font-mono">{info}</div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Question Navigation */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           {questions.map((_, index) => (

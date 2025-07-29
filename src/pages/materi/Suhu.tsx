@@ -3,7 +3,6 @@ import { useState } from "react";
 const Suhu = () => {
   // Array berisi path gambar slide materi suhu
   const slides = [
-    "/suhu/30.png",
     "/suhu/31.png",
     "/suhu/32.png",
     "/suhu/33.png",
@@ -31,6 +30,7 @@ const Suhu = () => {
     "/suhu/55.png",
     "/suhu/56.png",
     "/suhu/57.png",
+    "/suhu/58.png",
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);

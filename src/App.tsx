@@ -5,6 +5,8 @@ import PretestPage from "./pages/PretestPage";
 import Materi from "./pages/Materi";
 import Suhu from "./pages/materi/Suhu";
 import Kalor from "./pages/materi/Kalor";
+import Pemuaian from "./pages/materi/Pemuaian";
+import Refleksi from "./pages/Refleksi";
 
 export default function App() {
   return (
@@ -16,6 +18,8 @@ export default function App() {
         <Route path="/materi" element={<Materi />} />
         <Route path="/materi/suhu" element={<Suhu />} />
         <Route path="/materi/kalor" element={<Kalor />} />
+        <Route path="/materi/pemuaian" element={<Pemuaian />} />
+        <Route path="/refleksi" element={<Refleksi />} />
       </Routes>
     </BrowserRouter>
   );

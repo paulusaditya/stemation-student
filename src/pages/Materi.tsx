@@ -12,7 +12,7 @@ const Materi = () => {
       className="min-h-screen bg-cover bg-center bg-no-repeat p-6"
       style={{
         backgroundImage: "url('/materi.png')",
-        backgroundAttachment: "fixed", // ❗Background tetap
+        backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
       }}
@@ -24,8 +24,8 @@ const Materi = () => {
           <p className="text-lg text-gray-600">Pilih topik yang ingin dipelajari</p>
         </div>
 
-        {/* Grid Layout */}
-        <div className="grid grid-cols-2 gap-x-100 gap-y-35 max-w-7xl mx-auto">
+        {/* Grid Layout Suhu & Kalor */}
+        <div className="grid grid-cols-2 gap-70 max-w-7xl mx-auto mb-12">
           {/* Suhu */}
           <div className="relative">
             <button
@@ -53,12 +53,15 @@ const Materi = () => {
               </div>
             </button>
           </div>
+        </div>
 
-          {/* Pemuaian */}
-          <div className="relative">
+        {/* Grid Layout untuk Pemuaian */}
+        <div className="grid grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
+          <div></div> {/* Empty left column */}
+          <div className="relative col-span-1 flex justify-center">
             <button
               onClick={() => handleMateriClick('pemuaian')}
-              className="w-full h-48 bg-gradient-to-br from-green-300 to-teal-300 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-4 border-white relative overflow-hidden group"
+              className="w-full max-w-xl h-48 bg-gradient-to-br from-green-300 to-teal-300 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-4 border-white relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-white bg-opacity-20 group-hover:bg-opacity-30 transition-all duration-300"></div>
               <div className="relative z-10 flex flex-col items-center justify-center h-full p-6">
@@ -67,20 +70,7 @@ const Materi = () => {
               </div>
             </button>
           </div>
-
-          {/* Energi */}
-          <div className="relative">
-            <button
-              onClick={() => handleMateriClick('energi')}
-              className="w-full h-48 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-4 border-white relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-white bg-opacity-20 group-hover:bg-opacity-30 transition-all duration-300"></div>
-              <div className="relative z-10 flex flex-col items-center justify-center h-full p-6">
-                <div className="text-6xl mb-4">⚡</div>
-                <h2 className="text-2xl font-bold text-gray-800 tracking-wide">ENERGI</h2>
-              </div>
-            </button>
-          </div>
+          <div></div> {/* Empty right column */}
         </div>
 
         {/* Back Button */}

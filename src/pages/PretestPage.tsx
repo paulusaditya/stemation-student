@@ -105,10 +105,12 @@ export default function PretestPage() {
   const [showForm, setShowForm] = useState(true);
   const [username, setUsername] = useState("");
   const [absentNumber, setAbsentNumber] = useState("");
+  const [testType, setTestType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({
     username: "",
-    absentNumber: ""
+    absentNumber: "",
+    testType: ""
   });
 
   // Quiz states
@@ -133,7 +135,8 @@ export default function PretestPage() {
   const validateForm = () => {
     const newErrors = {
       username: "",
-      absentNumber: ""
+      absentNumber: "",
+      testType: ""
     };
     
     if (!username.trim()) {
@@ -150,8 +153,12 @@ export default function PretestPage() {
       newErrors.absentNumber = "Nomor absen harus antara 1-50";
     }
     
+    if (!testType.trim()) {
+      newErrors.testType = "Tipe test harus dipilih";
+    }
+    
     setFormErrors(newErrors);
-    return !newErrors.username && !newErrors.absentNumber;
+    return !newErrors.username && !newErrors.absentNumber && !newErrors.testType;
   };
 
   const startQuiz = async () => {
@@ -160,10 +167,11 @@ export default function PretestPage() {
       addDebugInfo("Memulai quiz...");
       
       try {
-        // PERBAIKAN: Hanya kirim data yang sesuai dengan database schema
+        // PERBAIKAN: Tambahkan field type ke payload
         const startPayload = {
           nama: username.trim(),
           absen: Number(absentNumber.trim()),
+          type: testType.trim(),
           score: 0  // Skor awal
         };
         
@@ -241,10 +249,11 @@ export default function PretestPage() {
 
   const submitQuizResult = async (percentage: number) => {
     try {
-      // PERBAIKAN: Gunakan PUT/PATCH untuk update, bukan POST baru
+      // PERBAIKAN: Tambahkan field type ke payload final
       const updatePayload = {
         nama: username.trim(),
         absen: Number(absentNumber.trim()),
+        type: testType.trim(),
         score: percentage,
       };
       
@@ -332,6 +341,7 @@ export default function PretestPage() {
     setTimeLeft(600);
     setUsername("");
     setAbsentNumber("");
+    setTestType("");
     setDebugInfo([]);
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -361,30 +371,32 @@ export default function PretestPage() {
     }
   };
 
+
+
   // Form Component
   if (showForm) {
     return (
-      <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
-        <div className="relative z-20 pt-12 text-center">
-          <h1 className="text-5xl font-extrabold text-white drop-shadow-2xl mb-4">
-            STEMation Quiz
-          </h1>
-          <h2 className="text-3xl font-bold text-yellow-300 drop-shadow-lg">
-            📘 Pretest - Data Peserta
-          </h2>
-        </div>
+      <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+        <div className="w-full max-w-lg">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-4">
+              STEMation Quiz
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-bold text-yellow-300 drop-shadow-lg">
+              📘 Quiz - Data Peserta
+            </h2>
+          </div>
 
-        <div className="relative z-20 mx-auto mt-12 w-[500px] max-w-[90%]">
-          <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-10 border border-white/30">
+          <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/30">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-3xl">👤</span>
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-2xl">👤</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
                 Masukkan Data Anda
               </h3>
-              <p className="text-gray-600">
-                Silakan isi data di bawah ini untuk memulai pretest
+              <p className="text-gray-600 text-sm">
+                Silakan isi data di bawah ini untuk memulai quiz
               </p>
             </div>
 
@@ -441,6 +453,32 @@ export default function PretestPage() {
                 )}
               </div>
 
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Tipe Test <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={testType}
+                  onChange={(e) => {
+                    setTestType(e.target.value);
+                    clearFormErrors("testType");
+                  }}
+                  placeholder="Masukkan tipe test (contoh: pretest atau posttest)"
+                  className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
+                    formErrors.testType 
+                      ? "border-red-400 focus:border-red-500 bg-red-50" 
+                      : "border-gray-300 focus:border-green-500 bg-white"
+                  }`}
+                />
+                {formErrors.testType && (
+                  <p className="mt-2 text-sm text-red-600 flex items-center animate-pulse">
+                    <span className="mr-2">⚠️</span>
+                    {formErrors.testType}
+                  </p>
+                )}
+              </div>
+
               <div className="flex gap-4 pt-6">
                 <button
                   onClick={() => window.location.href = '/menu'}
@@ -463,7 +501,7 @@ export default function PretestPage() {
                       Memulai...
                     </div>
                   ) : (
-                    "Mulai Pretest →"
+                    "Mulai Test →"
                   )}
                 </button>
               </div>
@@ -474,12 +512,13 @@ export default function PretestPage() {
                 <span className="text-blue-500 mr-3 mt-1 text-xl">ℹ️</span>
                 <div>
                   <h4 className="text-base font-bold text-blue-800 mb-2">
-                    Informasi Pretest
+                    Informasi Test
                   </h4>
                   <div className="text-sm text-blue-700 space-y-1">
                     <div>• Waktu pengerjaan: 10 menit</div>
-                    <div>• Jumlah soal: 6 soal pretest</div>
+                    <div>• Jumlah soal: 6 soal</div>
                     <div>• Data akan tersimpan otomatis setelah selesai</div>
+                    <div>• Pastikan tipe test yang dipilih sudah benar</div>
                   </div>
                 </div>
               </div>
@@ -492,29 +531,31 @@ export default function PretestPage() {
 
   // Quiz Component
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
-      <header className="relative z-20 mt-8 text-center">
-        <h1 className="text-3xl font-extrabold text-white drop-shadow-2xl">STEMation Quiz</h1>
-        <p className="mt-1 text-yellow-300 drop-shadow font-semibold">Nama: {username} | Absen: {absentNumber}</p>
-        <p className="text-red-300 font-bold mt-1 text-xl">Waktu Tersisa: {formatTime(timeLeft)}</p>
+    <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 p-4">
+      <header className="text-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-2xl">STEMation Quiz</h1>
+        <p className="mt-1 text-yellow-300 drop-shadow font-semibold text-sm md:text-base">
+          {username} | Absen: {absentNumber} | {testType}
+        </p>
+        <p className="text-red-300 font-bold mt-1 text-lg md:text-xl">⏰ {formatTime(timeLeft)}</p>
       </header>
 
-      <div className="relative z-20 mx-auto mt-4 w-[900px] max-w-[90%]">
+      <div className="mx-auto max-w-4xl">
         {/* Debug Panel */}
         {debugInfo.length > 0 && (
           <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-white font-semibold">🔍 Debug Info</h3>
+              <h3 className="text-white font-semibold text-sm">🔍 Debug Info</h3>
               <button
                 onClick={() => setDebugInfo([])}
-                className="text-white/70 hover:text-white text-sm"
+                className="text-white/70 hover:text-white text-xs"
               >
                 Clear
               </button>
             </div>
-            <div className="max-h-32 overflow-y-auto text-xs text-white/80 space-y-1">
+            <div className="max-h-20 overflow-y-auto text-xs text-white/80 space-y-1">
               {debugInfo.map((info, idx) => (
-                <div key={idx} className="font-mono">{info}</div>
+                <div key={idx} className="font-mono text-xs">{info}</div>
               ))}
             </div>
           </div>
@@ -535,91 +576,90 @@ export default function PretestPage() {
           ))}
         </div>
 
-        <div className="flex justify-center">
-          <div className="h-[550px] w-full bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-8 border border-white/20">
-            <div className="flex h-full w-full flex-col items-center justify-start">
-              {showResult ? (
-                <div className="w-full h-[550px] p-8 flex flex-col items-center justify-center text-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30">
-                    <h2 className="text-3xl font-bold text-white mb-4">🎉 Hasil Pretest</h2>
-                    <p className="text-white mb-4 text-lg">Selamat! Anda telah menyelesaikan pretest!</p>
-                    <div className="text-6xl font-bold text-yellow-300 mb-4">
-                      {score} / {questions.length}
-                    </div>
-                    <p className="text-2xl text-white mb-8">
-                      Nilai: {Math.round((score / questions.length) * 100)}%
-                    </p>
-                    <div className="flex gap-4 justify-center">
-                      <button 
-                        onClick={restartQuiz} 
-                        className="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-xl text-white font-semibold transition-all border border-white/30"
-                      >
-                        🔄 Ulangi Pretest
-                      </button>
-                      <button 
-                        onClick={() => window.location.href = '/menu'} 
-                        className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl text-white font-semibold transition-all"
-                      >
-                        🏠 Kembali ke Menu
-                      </button>
-                    </div>
-                  </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-4 md:p-6">
+          {showResult ? (
+            <div className="text-center py-8">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/30 max-w-lg mx-auto">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">🎉 Hasil Test</h2>
+                <p className="text-white mb-2 text-base md:text-lg">Selamat! Anda telah menyelesaikan test!</p>
+                <p className="text-yellow-300 mb-4 text-sm md:text-base">
+                  Tipe: {testType}
+                </p>
+                <div className="text-4xl md:text-6xl font-bold text-yellow-300 mb-4">
+                  {score} / {questions.length}
                 </div>
-              ) : (
-                <div className="w-full h-[550px] p-8">
-                  <h2 className="text-2xl font-medium text-white mb-2">
-                    📘 Pretest | Soal {current + 1} / {questions.length}
-                  </h2>
-
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
-                    <p className="text-center text-white text-xl font-medium">
-                      {questions[current]?.question}
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 mb-6">
-                    {questions[current]?.options.map(option => (
-                      <label
-                        key={option.id}
-                        className={`flex cursor-pointer items-center rounded-xl border p-4 transition-all hover:scale-[1.02] ${
-                          selected === option.id 
-                            ? "border-green-300 bg-white/20 shadow-lg" 
-                            : "border-white/30 bg-white/5 hover:bg-white/10"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="answer"
-                          value={option.id}
-                          checked={selected === option.id}
-                          onChange={(e) => selectAnswer(e.target.value)}
-                          className="mr-4 h-5 w-5 accent-green-400"
-                        />
-                        <span className="text-white text-lg">{option.text}</span>
-                      </label>
-                    ))}
-                  </div>
-
-                  <div className="flex gap-4">
-                    <button
-                      onClick={previousQuestion}
-                      disabled={current === 0}
-                      className="flex-1 rounded-xl bg-gray-300 py-3 text-gray-700 font-semibold hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    >
-                      ← Sebelumnya
-                    </button>
-                    <button
-                      onClick={nextQuestion}
-                      disabled={!selected}
-                      className="flex-1 rounded-xl bg-green-500 py-3 text-white font-semibold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    >
-                      {current === questions.length - 1 ? "Selesai ✓" : "Selanjutnya →"}
-                    </button>
-                  </div>
+                <p className="text-xl md:text-2xl text-white mb-6 md:mb-8">
+                  Nilai: {Math.round((score / questions.length) * 100)}%
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <button 
+                    onClick={restartQuiz} 
+                    className="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-xl text-white font-semibold transition-all border border-white/30"
+                  >
+                    🔄 Ulangi Test
+                  </button>
+                  <button 
+                    onClick={() => window.location.href = '/menu'} 
+                    className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl text-white font-semibold transition-all"
+                  >
+                    🏠 Kembali ke Menu
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-xl md:text-2xl font-medium text-white mb-4 text-center">
+                📝 {testType} | Soal {current + 1} / {questions.length}
+              </h2>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-6 mb-6 border border-white/20">
+                <p className="text-center text-white text-base md:text-xl font-medium leading-relaxed">
+                  {questions[current]?.question}
+                </p>
+              </div>
+
+              <div className="space-y-3 mb-6">
+                {questions[current]?.options.map(option => (
+                  <label
+                    key={option.id}
+                    className={`flex cursor-pointer items-center rounded-xl border p-3 md:p-4 transition-all hover:scale-[1.01] ${
+                      selected === option.id 
+                        ? "border-green-300 bg-white/20 shadow-lg" 
+                        : "border-white/30 bg-white/5 hover:bg-white/10"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="answer"
+                      value={option.id}
+                      checked={selected === option.id}
+                      onChange={(e) => selectAnswer(e.target.value)}
+                      className="mr-3 md:mr-4 h-4 w-4 md:h-5 md:w-5 accent-green-400 flex-shrink-0"
+                    />
+                    <span className="text-white text-sm md:text-lg leading-relaxed">{option.text}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={previousQuestion}
+                  disabled={current === 0}
+                  className="flex-1 rounded-xl bg-gray-300 py-3 text-gray-700 font-semibold hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm md:text-base"
+                >
+                  ← Sebelumnya
+                </button>
+                <button
+                  onClick={nextQuestion}
+                  disabled={!selected}
+                  className="flex-1 rounded-xl bg-green-500 py-3 text-white font-semibold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm md:text-base"
+                >
+                  {current === questions.length - 1 ? "Selesai ✓" : "Selanjutnya →"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

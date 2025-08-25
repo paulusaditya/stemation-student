@@ -42,12 +42,12 @@ const MenuPage = () => {
           >
             Refleksi Siswa - Siswi
           </button>
-          <button
+          {/* <button
             onClick={() => handleNavigate("/proyek")}
             className="w-full bg-[#FDF0D5] hover:bg-yellow-200 px-10 py-4 rounded-3xl text-2xl font-bold text-gray-800 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
           >
             Proyek Kelompok
-          </button>
+          </button> */}
         </div>
       </div>
 

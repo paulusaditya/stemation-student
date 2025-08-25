@@ -5,76 +5,83 @@ const mockQuestions = [
   {
     id: 1,
     session: "pretest" as const,
-    question: "Termometer apa yang paling cocok digunakan untuk mengukur suhu di tempat yang sangat dingin, seperti di kutub?",
+    question:
+      "Ketika sendok logam dimasukkan ke dalam teh panas, bagian ujung sendok yang tidak terkena teh ikut menjadi panas. Hal ini menunjukkan bahwa perpindahan kalor terjadi melalui mekanisme:",
     options: [
-      { id: "a", text: "Termometer Klinis" },
-      { id: "b", text: "Termometer Raksa" },
-      { id: "c", text: "Termometer Alkohol" },
-      { id: "d", text: "Termometer Digital" }
+      { id: "a", text: "Radiasi" },
+      { id: "b", text: "Konveksi" },
+      { id: "c", text: "Konduksi" },
+      { id: "d", text: "Evaporasi" }
     ],
     correct: "c"
   },
   {
     id: 2,
     session: "pretest" as const,
-    question: "Suhu air mendidih adalah 100°C. Jika diukur dengan termometer Fahrenheit, berapa suhu itu?",
+    question:
+      "Mengapa lantai keramik terasa lebih dingin dibandingkan karpet, padahal keduanya berada di ruangan yang bersuhu sama?",
     options: [
-      { id: "a", text: "180° F" },
-      { id: "b", text: "200° F" },
-      { id: "c", text: "212° F" },
-      { id: "d", text: "250° F" }
-    ],
-    correct: "c"
-  },
-  {
-    id: 3,
-    session: "pretest" as const,
-    question: "Sebuah benda menyerap kalor sebanyak 8.400 Joule. Massa benda 0,5 kg dan kalor jenisnya 420 J/kg°C. Berapa kenaikan suhu benda tersebut?",
-    options: [
-      { id: "a", text: "10° C" },
-      { id: "b", text: "20° C" },
-      { id: "c", text: "30° C" },
-      { id: "d", text: "40° C" }
+      { id: "a", text: "Karena keramik menyerap panas lebih sedikit" },
+      { id: "b", text: "Karena keramik memantulkan panas dari tubuh" },
+      { id: "c", text: "Karena keramik menghantarkan kalor lebih lambat dari karpet" },
+      { id: "d", text: "Karena keramik menghantarkan kalor lebih cepat dari tubuh ke lantai" }
     ],
     correct: "d"
   },
   {
+    id: 3,
+    session: "pretest" as const,
+    question:
+      "Ketika sebuah balon berisi udara diletakkan di bawah sinar matahari, balon tersebut mengembang. Hal ini menunjukkan bahwa:",
+    options: [
+      { id: "a", text: "Udara menyusut ketika dipanaskan" },
+      { id: "b", text: "Kenaikan suhu menyebabkan volume udara bertambah" },
+      { id: "c", text: "Tekanan udara di dalam balon berkurang" },
+      { id: "d", text: "Udara berubah menjadi zat cair" }
+    ],
+    correct: "b"
+  },
+  {
     id: 4,
     session: "pretest" as const,
-    question: "Seorang siswa memanaskan logam dan mencatat bahwa panjangnya bertambah 1,5 cm. Tapi menurut perhitungan, seharusnya hanya bertambah 1,0 cm. Apa yang sebaiknya dilakukan?",
+    question:
+      "Dua benda dengan massa sama dipanaskan oleh sumber panas yang sama. Benda A lebih cepat panas dibandingkan benda B. Hal ini terjadi karena:",
     options: [
-      { id: "a", text: "Mengganti Logam yang digunakan" },
-      { id: "b", text: "Menyesuaikan hasil supaya sesuai " },
-      { id: "c", text: "Mengecek kembali data dan perhitungannya" },
-      { id: "d", text: "Mengabaikan karena selisihnya kecil" }
+      { id: "a", text: "Warna benda A lebih gelap" },
+      { id: "b", text: "Permukaan benda A lebih besar" },
+      { id: "c", text: "Jenis bahan memengaruhi laju kenaikan suhu karena kalor jenisnya berbeda" },
+      { id: "d", text: "Letak benda A lebih dekat ke sumber panas" }
     ],
     correct: "c"
   },
   {
     id: 5,
     session: "pretest" as const,
-    question: "Saat membuat laporan percobaan mengukur suhu air, apa yang sebaiknya ditulis lebih dulu?",
+    question:
+      "Mengapa rel kereta api diberi celah sambungan logam, meskipun terlihat tidak rapi?",
     options: [
-      { id: "a", text: "Grafik Hasil Pengamatan" },
-      { id: "b", text: "Kesimpulan Akhir" },
-      { id: "c", text: "Tujuan percobaan" },
-      { id: "d", text: "Tabel suhu" }
+      { id: "a", text: "Agar rel terlihat simetris" },
+      { id: "b", text: "Untuk memperindah tampilan rel" },
+      { id: "c", text: "Agar rel tidak berkarat saat terkena hujan" },
+      { id: "d", text: "Agar rel tidak melengkung saat logam memuai karena panas" }
     ],
-    correct: "c"
+    correct: "d"
   },
   {
     id: 6,
     session: "pretest" as const,
-    question: "Kamu menghitung hasil pemuaian panjang logam dan hasilnya salah. Apa yang harus kamu lakukan?",
+    question:
+      "Mengapa es dalam termos bisa mencair meskipun termos digunakan untuk mempertahankan suhu?",
     options: [
-      { id: "a", text: "Dibiarkan saja karena perbedaannya kecil" },
-      { id: "b", text: "Menyalin jawaban teman" },
-      { id: "c", text: "Mengecek kembali rumus dan langkah perhitungan" },
-      { id: "d", text: "Mengulang semua percobaan dari awal" }
+      { id: "a", text: "Karena es mencair dengan sendirinya dalam waktu tertentu" },
+      { id: "b", text: "Karena termos mengeluarkan dingin dari dalam" },
+      { id: "c", text: "Karena kalor dari lingkungan tetap masuk meskipun lambat" },
+      { id: "d", text: "Karena dingin di dalam termos keluar melalui celah tutup" }
     ],
     correct: "c"
   }
 ];
+
 
 interface Option {
   id: string;

@@ -76,7 +76,6 @@ const mockQuestions = [
   }
 ];
 
-
 interface Option {
   id: string;
   text: string;
@@ -104,7 +103,7 @@ export default function PretestPage() {
   const [formErrors, setFormErrors] = useState({
     username: "",
     absentNumber: "",
-    testType: ""
+    testType: "",
   });
 
   // Quiz states
@@ -119,10 +118,10 @@ export default function PretestPage() {
 
   // Debug states
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
-  
+
   const addDebugInfo = (info: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setDebugInfo(prev => [...prev, `[${timestamp}] ${info}`]);
+    setDebugInfo((prev) => [...prev, `[${timestamp}] ${info}`]);
     console.log(`[DEBUG ${timestamp}] ${info}`);
   };
 
@@ -130,15 +129,15 @@ export default function PretestPage() {
     const newErrors = {
       username: "",
       absentNumber: "",
-      testType: ""
+      testType: "",
     };
-    
+
     if (!username.trim()) {
       newErrors.username = "Username harus diisi";
     } else if (username.trim().length < 2) {
       newErrors.username = "Username minimal 2 karakter";
     }
-    
+
     if (!absentNumber.trim()) {
       newErrors.absentNumber = "Nomor absen harus diisi";
     } else if (!/^\d+$/.test(absentNumber.trim())) {
@@ -146,41 +145,48 @@ export default function PretestPage() {
     } else if (parseInt(absentNumber) < 1 || parseInt(absentNumber) > 50) {
       newErrors.absentNumber = "Nomor absen harus antara 1-50";
     }
-    
+
     if (!testType.trim()) {
       newErrors.testType = "Tipe test harus dipilih";
     }
-    
+
     setFormErrors(newErrors);
-    return !newErrors.username && !newErrors.absentNumber && !newErrors.testType;
+    return (
+      !newErrors.username && !newErrors.absentNumber && !newErrors.testType
+    );
   };
 
   const startQuiz = async () => {
     if (validateForm()) {
       setIsLoading(true);
       addDebugInfo("Memulai quiz...");
-      
+
       try {
         // PERBAIKAN: Tambahkan field type ke payload
         const startPayload = {
           nama: username.trim(),
           absen: Number(absentNumber.trim()),
-          type: testType.trim(),
-          score: 0  // Skor awal
+          test_type: testType.trim(), // ✅ pakai field baru
+          score: 0,
         };
-        
-        addDebugInfo(`Mengirim data awal: ${JSON.stringify(startPayload)}`);
-        
-        const response = await fetch("https://stemation-backend.vercel.app/api/results", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json" 
-          },
-          body: JSON.stringify(startPayload),
-        });
 
-        addDebugInfo(`Response status: ${response.status} - ${response.statusText}`);
-        
+        addDebugInfo(`Mengirim data awal: ${JSON.stringify(startPayload)}`);
+
+        const response = await fetch(
+          "https://stemation-backend.vercel.app/api/results",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(startPayload),
+          }
+        );
+
+        addDebugInfo(
+          `Response status: ${response.status} - ${response.statusText}`
+        );
+
         if (!response.ok) {
           const errorText = await response.text();
           addDebugInfo(`Error response: ${errorText}`);
@@ -190,18 +196,18 @@ export default function PretestPage() {
         }
 
         // Initialize quiz
-        const shuffledQuestions = shuffleArray([...mockQuestions]).map(q => ({
+        const shuffledQuestions = shuffleArray([...mockQuestions]).map((q) => ({
           ...q,
           options: shuffleArray(q.options),
         }));
-        
+
         setQuestions(shuffledQuestions);
         setShowForm(false);
         addDebugInfo("Quiz dimulai, timer diaktifkan");
-        
+
         // Start timer
         timerRef.current = setInterval(() => {
-          setTimeLeft(prev => {
+          setTimeLeft((prev) => {
             if (prev <= 1) {
               clearInterval(timerRef.current!);
               handleFinish();
@@ -210,23 +216,22 @@ export default function PretestPage() {
             return prev - 1;
           });
         }, 1000);
-        
       } catch (error) {
         addDebugInfo(`Network error: ${error}`);
         console.error("❌ Network error:", error);
-        
+
         // Still start quiz even if backend fails
-        const shuffledQuestions = shuffleArray([...mockQuestions]).map(q => ({
+        const shuffledQuestions = shuffleArray([...mockQuestions]).map((q) => ({
           ...q,
           options: shuffleArray(q.options),
         }));
-        
+
         setQuestions(shuffledQuestions);
         setShowForm(false);
-        
+
         // Start timer
         timerRef.current = setInterval(() => {
-          setTimeLeft(prev => {
+          setTimeLeft((prev) => {
             if (prev <= 1) {
               clearInterval(timerRef.current!);
               handleFinish();
@@ -247,20 +252,25 @@ export default function PretestPage() {
       const updatePayload = {
         nama: username.trim(),
         absen: Number(absentNumber.trim()),
-        type: testType.trim(),
+        test_type: testType.trim(), // ✅
         score: percentage,
       };
-      
+
       addDebugInfo(`Mengirim hasil akhir: ${JSON.stringify(updatePayload)}`);
-      
-      const response = await fetch("https://stemation-backend.vercel.app/api/results", {
-        method: "POST", // Mungkin perlu diubah ke PUT atau PATCH
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatePayload),
-      });
-      
-      addDebugInfo(`Final submit status: ${response.status} - ${response.statusText}`);
-      
+
+      const response = await fetch(
+        "https://stemation-backend.vercel.app/api/results",
+        {
+          method: "POST", // Mungkin perlu diubah ke PUT atau PATCH
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatePayload),
+        }
+      );
+
+      addDebugInfo(
+        `Final submit status: ${response.status} - ${response.statusText}`
+      );
+
       if (response.ok) {
         const data = await response.json();
         addDebugInfo(`Final result saved: ${JSON.stringify(data)}`);
@@ -279,15 +289,17 @@ export default function PretestPage() {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-    
+
     const correctAnswers = Object.entries(answers).filter(
       ([idx, val]) => val === questions[Number(idx)].correct
     );
     const finalScore = correctAnswers.length;
     const percentage = Math.round((finalScore / questions.length) * 100);
-    
-    addDebugInfo(`Quiz selesai. Skor: ${finalScore}/${questions.length} (${percentage}%)`);
-    
+
+    addDebugInfo(
+      `Quiz selesai. Skor: ${finalScore}/${questions.length} (${percentage}%)`
+    );
+
     setScore(finalScore);
     setShowResult(true);
     submitQuizResult(percentage);
@@ -317,7 +329,7 @@ export default function PretestPage() {
 
   const selectAnswer = (value: string) => {
     setSelected(value);
-    setAnswers(prev => ({ ...prev, [current]: value }));
+    setAnswers((prev) => ({ ...prev, [current]: value }));
   };
 
   const goToQuestion = (index: number) => {
@@ -358,14 +370,12 @@ export default function PretestPage() {
 
   const clearFormErrors = (field: string) => {
     if (formErrors[field as keyof typeof formErrors]) {
-      setFormErrors(prev => ({
+      setFormErrors((prev) => ({
         ...prev,
-        [field]: ""
+        [field]: "",
       }));
     }
   };
-
-
 
   // Form Component
   if (showForm) {
@@ -408,8 +418,8 @@ export default function PretestPage() {
                   }}
                   placeholder="Masukkan nama lengkap Anda"
                   className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.username 
-                      ? "border-red-400 focus:border-red-500 bg-red-50" 
+                    formErrors.username
+                      ? "border-red-400 focus:border-red-500 bg-red-50"
                       : "border-gray-300 focus:border-green-500 bg-white"
                   }`}
                 />
@@ -434,8 +444,8 @@ export default function PretestPage() {
                   }}
                   placeholder="Masukkan nomor absen (1-50)"
                   className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.absentNumber 
-                      ? "border-red-400 focus:border-red-500 bg-red-50" 
+                    formErrors.absentNumber
+                      ? "border-red-400 focus:border-red-500 bg-red-50"
                       : "border-gray-300 focus:border-green-500 bg-white"
                   }`}
                 />
@@ -460,8 +470,8 @@ export default function PretestPage() {
                   }}
                   placeholder="Masukkan tipe test (contoh: pretest atau posttest)"
                   className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.testType 
-                      ? "border-red-400 focus:border-red-500 bg-red-50" 
+                    formErrors.testType
+                      ? "border-red-400 focus:border-red-500 bg-red-50"
                       : "border-gray-300 focus:border-green-500 bg-white"
                   }`}
                 />
@@ -475,7 +485,7 @@ export default function PretestPage() {
 
               <div className="flex gap-4 pt-6">
                 <button
-                  onClick={() => window.location.href = '/menu'}
+                  onClick={() => (window.location.href = "/menu")}
                   className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 hover:border-gray-400 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-200 text-lg"
                 >
                   ← Kembali ke Menu
@@ -484,8 +494,8 @@ export default function PretestPage() {
                   onClick={startQuiz}
                   disabled={isLoading}
                   className={`flex-1 px-6 py-4 rounded-xl text-white font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 shadow-lg transform text-lg ${
-                    isLoading 
-                      ? "bg-gray-400 cursor-not-allowed" 
+                    isLoading
+                      ? "bg-gray-400 cursor-not-allowed"
                       : "bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 hover:scale-105"
                   }`}
                 >
@@ -527,11 +537,15 @@ export default function PretestPage() {
   return (
     <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 p-4">
       <header className="text-center mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-2xl">STEMation Quiz</h1>
+        <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-2xl">
+          STEMation Quiz
+        </h1>
         <p className="mt-1 text-yellow-300 drop-shadow font-semibold text-sm md:text-base">
           {username} | Absen: {absentNumber} | {testType}
         </p>
-        <p className="text-red-300 font-bold mt-1 text-lg md:text-xl">⏰ {formatTime(timeLeft)}</p>
+        <p className="text-red-300 font-bold mt-1 text-lg md:text-xl">
+          ⏰ {formatTime(timeLeft)}
+        </p>
       </header>
 
       <div className="mx-auto max-w-4xl">
@@ -539,7 +553,9 @@ export default function PretestPage() {
         {debugInfo.length > 0 && (
           <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-white font-semibold text-sm">🔍 Debug Info</h3>
+              <h3 className="text-white font-semibold text-sm">
+                🔍 Debug Info
+              </h3>
               <button
                 onClick={() => setDebugInfo([])}
                 className="text-white/70 hover:text-white text-xs"
@@ -549,7 +565,9 @@ export default function PretestPage() {
             </div>
             <div className="max-h-20 overflow-y-auto text-xs text-white/80 space-y-1">
               {debugInfo.map((info, idx) => (
-                <div key={idx} className="font-mono text-xs">{info}</div>
+                <div key={idx} className="font-mono text-xs">
+                  {info}
+                </div>
               ))}
             </div>
           </div>
@@ -562,7 +580,9 @@ export default function PretestPage() {
               key={index}
               onClick={() => goToQuestion(index)}
               className={`w-8 h-8 rounded-full font-bold text-sm transition-all ${
-                answers[index] ? "bg-green-500 text-white" : "bg-white text-gray-700"
+                answers[index]
+                  ? "bg-green-500 text-white"
+                  : "bg-white text-gray-700"
               } ${index === current ? "ring-2 ring-yellow-400 scale-110" : ""}`}
             >
               {index + 1}
@@ -574,8 +594,12 @@ export default function PretestPage() {
           {showResult ? (
             <div className="text-center py-8">
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/30 max-w-lg mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">🎉 Hasil Test</h2>
-                <p className="text-white mb-2 text-base md:text-lg">Selamat! Anda telah menyelesaikan test!</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  🎉 Hasil Test
+                </h2>
+                <p className="text-white mb-2 text-base md:text-lg">
+                  Selamat! Anda telah menyelesaikan test!
+                </p>
                 <p className="text-yellow-300 mb-4 text-sm md:text-base">
                   Tipe: {testType}
                 </p>
@@ -586,14 +610,14 @@ export default function PretestPage() {
                   Nilai: {Math.round((score / questions.length) * 100)}%
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <button 
-                    onClick={restartQuiz} 
+                  <button
+                    onClick={restartQuiz}
                     className="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-xl text-white font-semibold transition-all border border-white/30"
                   >
                     🔄 Ulangi Test
                   </button>
-                  <button 
-                    onClick={() => window.location.href = '/menu'} 
+                  <button
+                    onClick={() => (window.location.href = "/menu")}
                     className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl text-white font-semibold transition-all"
                   >
                     🏠 Kembali ke Menu
@@ -614,12 +638,12 @@ export default function PretestPage() {
               </div>
 
               <div className="space-y-3 mb-6">
-                {questions[current]?.options.map(option => (
+                {questions[current]?.options.map((option) => (
                   <label
                     key={option.id}
                     className={`flex cursor-pointer items-center rounded-xl border p-3 md:p-4 transition-all hover:scale-[1.01] ${
-                      selected === option.id 
-                        ? "border-green-300 bg-white/20 shadow-lg" 
+                      selected === option.id
+                        ? "border-green-300 bg-white/20 shadow-lg"
                         : "border-white/30 bg-white/5 hover:bg-white/10"
                     }`}
                   >
@@ -631,7 +655,9 @@ export default function PretestPage() {
                       onChange={(e) => selectAnswer(e.target.value)}
                       className="mr-3 md:mr-4 h-4 w-4 md:h-5 md:w-5 accent-green-400 flex-shrink-0"
                     />
-                    <span className="text-white text-sm md:text-lg leading-relaxed">{option.text}</span>
+                    <span className="text-white text-sm md:text-lg leading-relaxed">
+                      {option.text}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -649,7 +675,9 @@ export default function PretestPage() {
                   disabled={!selected}
                   className="flex-1 rounded-xl bg-green-500 py-3 text-white font-semibold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm md:text-base"
                 >
-                  {current === questions.length - 1 ? "Selesai ✓" : "Selanjutnya →"}
+                  {current === questions.length - 1
+                    ? "Selesai ✓"
+                    : "Selanjutnya →"}
                 </button>
               </div>
             </div>

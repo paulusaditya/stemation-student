@@ -75,6 +75,7 @@ const mockQuestions = [
     correct: "c"
   }
 ];
+
 interface Option {
   id: string;
   text: string;
@@ -92,7 +93,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return [...array].sort(() => Math.random() - 0.5);
 }
 
-export default function PretestPage() {
+export default function PosttestPage() {
   // Form states
   const [showForm, setShowForm] = useState(true);
   const [username, setUsername] = useState("");
@@ -115,14 +116,7 @@ export default function PretestPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debug states
-  const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
-  const addDebugInfo = (info: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    setDebugInfo((prev) => [...prev, `[${timestamp}] ${info}`]);
-    console.log(`[DEBUG ${timestamp}] ${info}`);
-  };
 
   const validateForm = () => {
     const newErrors = {
@@ -158,7 +152,6 @@ export default function PretestPage() {
   const startQuiz = async () => {
     if (validateForm()) {
       setIsLoading(true);
-      addDebugInfo("Memulai quiz...");
 
       try {
         const startPayload = {
@@ -167,8 +160,6 @@ export default function PretestPage() {
           test_type: testType.trim(),
           score: 0,
         };
-
-        addDebugInfo(`Mengirim data awal: ${JSON.stringify(startPayload)}`);
 
         const response = await fetch(
           "https://stemation-backend.vercel.app/api/results",
@@ -181,16 +172,10 @@ export default function PretestPage() {
           }
         );
 
-        addDebugInfo(
-          `Response status: ${response.status} - ${response.statusText}`
-        );
-
         if (!response.ok) {
           const errorText = await response.text();
-          addDebugInfo(`Error response: ${errorText}`);
-        } else {
-          const responseData = await response.json();
-          addDebugInfo(`Success response: ${JSON.stringify(responseData)}`);
+          console.error("❌ Server error:", errorText);
+          throw new Error("Failed to start quiz");
         }
 
         // Initialize quiz
@@ -201,7 +186,6 @@ export default function PretestPage() {
 
         setQuestions(shuffledQuestions);
         setShowForm(false);
-        addDebugInfo("Quiz dimulai, timer diaktifkan");
 
         // Start timer
         timerRef.current = setInterval(() => {
@@ -215,7 +199,6 @@ export default function PretestPage() {
           });
         }, 1000);
       } catch (error) {
-        addDebugInfo(`Network error: ${error}`);
         console.error("❌ Network error:", error);
 
         // Still start quiz even if backend fails
@@ -253,8 +236,6 @@ export default function PretestPage() {
         score: percentage,
       };
 
-      addDebugInfo(`Mengirim hasil akhir: ${JSON.stringify(updatePayload)}`);
-
       const response = await fetch(
         "https://stemation-backend.vercel.app/api/results",
         {
@@ -264,20 +245,14 @@ export default function PretestPage() {
         }
       );
 
-      addDebugInfo(
-        `Final submit status: ${response.status} - ${response.statusText}`
-      );
-
       if (response.ok) {
         const data = await response.json();
-        addDebugInfo(`Final result saved: ${JSON.stringify(data)}`);
         console.log("✅ Hasil tersimpan:", data);
       } else {
         const errorText = await response.text();
-        addDebugInfo(`Final submit error: ${errorText}`);
+        console.error("❌ Gagal menyimpan hasil:", errorText);
       }
     } catch (err) {
-      addDebugInfo(`Final submit network error: ${err}`);
       console.error("❌ Gagal menyimpan hasil:", err);
     }
   };
@@ -292,10 +267,6 @@ export default function PretestPage() {
     );
     const finalScore = correctAnswers.length;
     const percentage = Math.round((finalScore / questions.length) * 100);
-
-    addDebugInfo(
-      `Quiz selesai. Skor: ${finalScore}/${questions.length} (${percentage}%)`
-    );
 
     setScore(finalScore);
     setShowResult(true);
@@ -332,23 +303,6 @@ export default function PretestPage() {
   const goToQuestion = (index: number) => {
     setCurrent(index);
     setSelected(answers[index] || "");
-  };
-
-  const restartQuiz = () => {
-    setCurrent(0);
-    setSelected("");
-    setAnswers({});
-    setScore(0);
-    setShowResult(false);
-    setShowForm(true);
-    setTimeLeft(600);
-    setUsername("");
-    setAbsentNumber("");
-    setTestType("");
-    setDebugInfo([]);
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
   };
 
   useEffect(() => {

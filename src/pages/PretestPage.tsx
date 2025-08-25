@@ -189,11 +189,10 @@ export default function PretestPage() {
       addDebugInfo("Memulai quiz...");
 
       try {
-        // PERBAIKAN: Tambahkan field type ke payload
         const startPayload = {
           nama: username.trim(),
           absen: Number(absentNumber.trim()),
-          test_type: testType.trim(), // ✅ pakai field baru
+          test_type: testType.trim(),
           score: 0,
         };
 
@@ -275,11 +274,10 @@ export default function PretestPage() {
 
   const submitQuizResult = async (percentage: number) => {
     try {
-      // PERBAIKAN: Tambahkan field type ke payload final
       const updatePayload = {
         nama: username.trim(),
         absen: Number(absentNumber.trim()),
-        test_type: testType.trim(), // ✅
+        test_type: testType.trim(),
         score: percentage,
       };
 
@@ -288,7 +286,7 @@ export default function PretestPage() {
       const response = await fetch(
         "https://stemation-backend.vercel.app/api/results",
         {
-          method: "POST", // Mungkin perlu diubah ke PUT atau PATCH
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatePayload),
         }
@@ -404,26 +402,38 @@ export default function PretestPage() {
     }
   };
 
-  // Form Component
+  // Form Component with Enhanced Colors
   if (showForm) {
     return (
-      <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+      <div
+        className="min-h-screen w-full flex items-center justify-center p-4 bg-cover bg-center"
+        style={{ backgroundImage: "url('/1.png')" }}
+      >
         <div className="w-full max-w-lg">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-4">
+          <div className="text-center mb-8 animate-fade-in">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl animate-bounce">
+                <span className="text-3xl">🧪</span>
+              </div>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-4 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
               STEMation Quiz
             </h1>
-            <h2 className="text-2xl md:text-3xl font-bold text-yellow-300 drop-shadow-lg">
-              📘 Quiz - Data Peserta
+            <h2 className="text-2xl md:text-3xl font-bold text-cyan-200 drop-shadow-lg animate-pulse">
+              ✨ Data Peserta ✨
             </h2>
           </div>
 
-          <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/30">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border-2 border-white/40 relative overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute -top-10 -right-10 w-24 h-24 bg-gradient-to-r from-pink-300 to-purple-400 rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute -bottom-8 -left-8 w-20 h-20 bg-gradient-to-r from-blue-300 to-cyan-400 rounded-full opacity-20 animate-pulse delay-300"></div>
+
+            <div className="text-center mb-8 relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 via-teal-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl animate-spin-slow">
                 <span className="text-2xl">👤</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">
+              <h3 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
                 Masukkan Data Anda
               </h3>
               <p className="text-gray-600 text-sm">
@@ -431,79 +441,94 @@ export default function PretestPage() {
               </p>
             </div>
 
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Nama Lengkap <span className="text-red-500">*</span>
+            <div className="space-y-6 relative z-10">
+              <div className="group">
+                <label className="block text-sm font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
+                  🏷️ Nama Lengkap <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => {
-                    setUsername(e.target.value);
-                    clearFormErrors("username");
-                  }}
-                  placeholder="Masukkan nama lengkap Anda"
-                  className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.username
-                      ? "border-red-400 focus:border-red-500 bg-red-50"
-                      : "border-gray-300 focus:border-green-500 bg-white"
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      clearFormErrors("username");
+                    }}
+                    placeholder="Masukkan nama lengkap Anda"
+                    className={`w-full px-5 py-4 rounded-2xl border-3 transition-all duration-300 focus:outline-none focus:ring-4 text-lg font-medium bg-gradient-to-r ${
+                      formErrors.username
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200 from-red-50 to-pink-50"
+                        : "border-transparent bg-gradient-to-r from-blue-50 to-indigo-50 focus:from-blue-100 focus:to-indigo-100 focus:ring-blue-200 group-hover:from-blue-100 group-hover:to-indigo-100"
+                    } shadow-lg hover:shadow-xl transform hover:scale-[1.02]`}
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <span className="text-2xl">📝</span>
+                  </div>
+                </div>
                 {formErrors.username && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center animate-pulse">
+                  <p className="mt-2 text-sm text-red-600 flex items-center animate-bounce bg-red-50 px-3 py-2 rounded-lg border border-red-200">
                     <span className="mr-2">⚠️</span>
                     {formErrors.username}
                   </p>
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Nomor Absen <span className="text-red-500">*</span>
+              <div className="group">
+                <label className="block text-sm font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-3">
+                  🔢 Nomor Absen <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={absentNumber}
-                  onChange={(e) => {
-                    setAbsentNumber(e.target.value);
-                    clearFormErrors("absentNumber");
-                  }}
-                  placeholder="Masukkan nomor absen (1-50)"
-                  className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.absentNumber
-                      ? "border-red-400 focus:border-red-500 bg-red-50"
-                      : "border-gray-300 focus:border-green-500 bg-white"
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={absentNumber}
+                    onChange={(e) => {
+                      setAbsentNumber(e.target.value);
+                      clearFormErrors("absentNumber");
+                    }}
+                    placeholder="Masukkan nomor absen (1-50)"
+                    className={`w-full px-5 py-4 rounded-2xl border-3 transition-all duration-300 focus:outline-none focus:ring-4 text-lg font-medium ${
+                      formErrors.absentNumber
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200 bg-gradient-to-r from-red-50 to-pink-50"
+                        : "border-transparent bg-gradient-to-r from-green-50 to-teal-50 focus:from-green-100 focus:to-teal-100 focus:ring-green-200 group-hover:from-green-100 group-hover:to-teal-100"
+                    } shadow-lg hover:shadow-xl transform hover:scale-[1.02]`}
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <span className="text-2xl">📊</span>
+                  </div>
+                </div>
                 {formErrors.absentNumber && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center animate-pulse">
+                  <p className="mt-2 text-sm text-red-600 flex items-center animate-bounce bg-red-50 px-3 py-2 rounded-lg border border-red-200">
                     <span className="mr-2">⚠️</span>
                     {formErrors.absentNumber}
                   </p>
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Tipe Test <span className="text-red-500">*</span>
+              <div className="group">
+                <label className="block text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                  🎯 Tipe Test <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={testType}
-                  onChange={(e) => {
-                    setTestType(e.target.value);
-                    clearFormErrors("testType");
-                  }}
-                  placeholder="Masukkan tipe test (contoh: pretest atau posttest)"
-                  className={`w-full px-5 py-4 rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 text-lg ${
-                    formErrors.testType
-                      ? "border-red-400 focus:border-red-500 bg-red-50"
-                      : "border-gray-300 focus:border-green-500 bg-white"
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={testType}
+                    onChange={(e) => {
+                      setTestType(e.target.value);
+                      clearFormErrors("testType");
+                    }}
+                    placeholder="Masukkan tipe test (contoh: pretest atau posttest)"
+                    className={`w-full px-5 py-4 rounded-2xl border-3 transition-all duration-300 focus:outline-none focus:ring-4 text-lg font-medium ${
+                      formErrors.testType
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200 bg-gradient-to-r from-red-50 to-pink-50"
+                        : "border-transparent bg-gradient-to-r from-purple-50 to-pink-50 focus:from-purple-100 focus:to-pink-100 focus:ring-purple-200 group-hover:from-purple-100 group-hover:to-pink-100"
+                    } shadow-lg hover:shadow-xl transform hover:scale-[1.02]`}
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <span className="text-2xl">🚀</span>
+                  </div>
+                </div>
                 {formErrors.testType && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center animate-pulse">
+                  <p className="mt-2 text-sm text-red-600 flex items-center animate-bounce bg-red-50 px-3 py-2 rounded-lg border border-red-200">
                     <span className="mr-2">⚠️</span>
                     {formErrors.testType}
                   </p>
@@ -513,17 +538,17 @@ export default function PretestPage() {
               <div className="flex gap-4 pt-6">
                 <button
                   onClick={() => (window.location.href = "/menu")}
-                  className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 hover:border-gray-400 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-200 text-lg"
+                  className="flex-1 px-6 py-4 rounded-2xl bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 font-bold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] border-2 border-gray-300"
                 >
                   ← Kembali ke Menu
                 </button>
                 <button
                   onClick={startQuiz}
                   disabled={isLoading}
-                  className={`flex-1 px-6 py-4 rounded-xl text-white font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-200 shadow-lg transform text-lg ${
+                  className={`flex-1 px-6 py-4 rounded-2xl text-white font-bold transition-all duration-300 focus:outline-none focus:ring-4 shadow-xl text-lg transform ${
                     isLoading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 hover:scale-105"
+                      ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 focus:ring-emerald-300 hover:scale-[1.02] animate-pulse"
                   }`}
                 >
                   {isLoading ? (
@@ -532,24 +557,43 @@ export default function PretestPage() {
                       Memulai...
                     </div>
                   ) : (
-                    "Mulai Test →"
+                    <div className="flex items-center justify-center">
+                      <span className="mr-2">🎮</span>
+                      Mulai Test
+                      <span className="ml-2">→</span>
+                    </div>
                   )}
                 </button>
               </div>
             </div>
 
-            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-              <div className="flex items-start">
-                <span className="text-blue-500 mr-3 mt-1 text-xl">ℹ️</span>
+            <div className="mt-8 p-6 bg-gradient-to-r from-cyan-50 via-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 shadow-inner relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full opacity-30 transform translate-x-8 -translate-y-8"></div>
+              <div className="flex items-start relative z-10">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                  <span className="text-white text-lg">ℹ️</span>
+                </div>
                 <div>
-                  <h4 className="text-base font-bold text-blue-800 mb-2">
-                    Informasi Test
+                  <h4 className="text-base font-bold bg-gradient-to-r from-blue-800 to-indigo-800 bg-clip-text text-transparent mb-3">
+                    📋 Informasi Test
                   </h4>
-                  <div className="text-sm text-blue-700 space-y-1">
-                    <div>• Waktu pengerjaan: 10 menit</div>
-                    <div>• Jumlah soal: 6 soal</div>
-                    <div>• Data akan tersimpan otomatis setelah selesai</div>
-                    <div>• Pastikan tipe test yang dipilih sudah benar</div>
+                  <div className="text-sm text-blue-700 space-y-2">
+                    <div className="flex items-center">
+                      <span className="mr-2">⏱️</span>
+                      <span>Waktu pengerjaan: 10 menit</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-2">📝</span>
+                      <span>Jumlah soal: 6 soal</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-2">💾</span>
+                      <span>Data akan tersimpan otomatis setelah selesai</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-2">✅</span>
+                      <span>Pastikan tipe test yang dipilih sudah benar</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -560,155 +604,221 @@ export default function PretestPage() {
     );
   }
 
-  // Quiz Component
+  // Enhanced Quiz Component with Card Layout
   return (
-    <div className="min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 p-4">
-      <header className="text-center mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-2xl">
-          STEMation Quiz
-        </h1>
-        <p className="mt-1 text-yellow-300 drop-shadow font-semibold text-sm md:text-base">
-          {username} | Absen: {absentNumber} | {testType}
-        </p>
-        <p className="text-red-300 font-bold mt-1 text-lg md:text-xl">
-          ⏰ {formatTime(timeLeft)}
-        </p>
-      </header>
-
-      <div className="mx-auto max-w-4xl">
-        {/* Debug Panel */}
-        {debugInfo.length > 0 && (
-          <div className="mb-4 bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-white font-semibold text-sm">
-                🔍 Debug Info
-              </h3>
-              <button
-                onClick={() => setDebugInfo([])}
-                className="text-white/70 hover:text-white text-xs"
-              >
-                Clear
-              </button>
+    <div
+      className="min-h-screen w-full p-4 bg-cover bg-center"
+      style={{ backgroundImage: "url('/1.png')" }}
+    >
+      {/* Header Card */}
+      <div className="max-w-4xl mx-auto mb-6">
+        <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border-2 border-white/40 relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-r from-purple-300 to-pink-400 rounded-full opacity-20 animate-pulse"></div>
+          <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-r from-blue-300 to-cyan-400 rounded-full opacity-20 animate-pulse delay-300"></div>
+          
+          <div className="text-center relative z-10">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-xl animate-bounce">
+                <span className="text-2xl">🧪</span>
+              </div>
             </div>
-            <div className="max-h-20 overflow-y-auto text-xs text-white/80 space-y-1">
-              {debugInfo.map((info, idx) => (
-                <div key={idx} className="font-mono text-xs">
-                  {info}
-                </div>
+            <h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-indigo-800 to-purple-800 bg-clip-text text-transparent mb-3">
+              STEMation Quiz
+            </h1>
+            <div className="bg-gradient-to-r from-blue-100 to-indigo-100 px-6 py-3 rounded-2xl inline-block border-2 border-blue-200 shadow-lg">
+              <p className="text-gray-800 font-bold text-sm md:text-base">
+                👤 {username} | 📊 Absen: {absentNumber} | 🎯 {testType}
+              </p>
+            </div>
+            <div className="mt-4 bg-gradient-to-r from-red-500 via-rose-600 to-red-700 px-6 py-3 rounded-2xl inline-block shadow-xl border-2 border-red-300">
+              <p className="text-white font-bold text-lg md:text-xl animate-pulse">
+                ⏰ {formatTime(timeLeft)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto">
+        {/* Question Navigation Card */}
+        <div className="mb-6">
+          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border-2 border-white/40 relative overflow-hidden">
+            <div className="text-center mb-4">
+              <h3 className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                📋 Navigasi Soal
+              </h3>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {questions.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToQuestion(index)}
+                  className={`w-12 h-12 rounded-2xl font-bold text-sm transition-all duration-300 shadow-lg border-2 transform hover:scale-110 ${
+                    answers[index]
+                      ? "bg-gradient-to-r from-green-400 to-emerald-600 text-white border-green-300 shadow-green-400/40"
+                      : "bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-700 border-blue-200 hover:from-blue-200 hover:to-indigo-200"
+                  } ${
+                    index === current
+                      ? "ring-4 ring-yellow-400 scale-125 shadow-2xl border-yellow-300"
+                      : ""
+                  }`}
+                >
+                  {index + 1}
+                </button>
               ))}
             </div>
           </div>
-        )}
-
-        {/* Question Navigation */}
-        <div className="flex flex-wrap justify-center gap-2 mb-4">
-          {questions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToQuestion(index)}
-              className={`w-8 h-8 rounded-full font-bold text-sm transition-all ${
-                answers[index]
-                  ? "bg-green-500 text-white"
-                  : "bg-white text-gray-700"
-              } ${index === current ? "ring-2 ring-yellow-400 scale-110" : ""}`}
-            >
-              {index + 1}
-            </button>
-          ))}
         </div>
 
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-4 md:p-6">
-          {showResult ? (
-            <div className="text-center py-8">
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/30 max-w-lg mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                  🎉 Hasil Test
-                </h2>
-                <p className="text-white mb-2 text-base md:text-lg">
-                  Selamat! Anda telah menyelesaikan test!
-                </p>
-                <p className="text-yellow-300 mb-4 text-sm md:text-base">
-                  Tipe: {testType}
-                </p>
-                <div className="text-4xl md:text-6xl font-bold text-yellow-300 mb-4">
-                  {score} / {questions.length}
-                </div>
-                <p className="text-xl md:text-2xl text-white mb-6 md:mb-8">
-                  Nilai: {Math.round((score / questions.length) * 100)}%
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <button
-                    onClick={restartQuiz}
-                    className="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-xl text-white font-semibold transition-all border border-white/30"
-                  >
-                    🔄 Ulangi Test
-                  </button>
+        {/* Main Quiz Card */}
+        <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/40 relative overflow-hidden">
+          {/* Decorative Background Elements */}
+          <div className="absolute -top-10 -right-10 w-24 h-24 bg-gradient-to-r from-pink-300 to-purple-400 rounded-full opacity-15 animate-pulse"></div>
+          <div className="absolute -bottom-8 -left-8 w-20 h-20 bg-gradient-to-r from-blue-300 to-cyan-400 rounded-full opacity-15 animate-pulse delay-300"></div>
+          
+          <div className="p-6 md:p-8 relative z-10">
+            {showResult ? (
+              <div className="text-center py-8">
+                <div className="max-w-lg mx-auto">
+                  <div className="mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl animate-bounce">
+                      <span className="text-3xl">🎉</span>
+                    </div>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
+                    Hasil Test
+                  </h2>
+                  <p className="text-gray-700 mb-2 text-base md:text-lg font-semibold">
+                    Selamat! Anda telah menyelesaikan test!
+                  </p>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 mb-6 border-2 border-blue-200">
+                    <p className="text-blue-800 font-bold text-sm md:text-base">
+                      📊 Tipe Test: {testType}
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-3xl p-8 mb-6 border-2 border-yellow-300 shadow-inner">
+                    <div className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-4">
+                      {score} / {questions.length}
+                    </div>
+                    <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                      Nilai: {Math.round((score / questions.length) * 100)}%
+                    </p>
+                  </div>
+                  
                   <button
                     onClick={() => (window.location.href = "/menu")}
-                    className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl text-white font-semibold transition-all"
+                    className="px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-300 text-lg shadow-xl transform hover:scale-[1.02]"
                   >
-                    🏠 Kembali ke Menu
+                    <div className="flex items-center justify-center">
+                      <span className="mr-2">🏠</span>
+                      Kembali ke Menu
+                      <span className="ml-2">→</span>
+                    </div>
                   </button>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="max-w-3xl mx-auto">
-              <h2 className="text-xl md:text-2xl font-medium text-white mb-4 text-center">
-                📝 {testType} | Soal {current + 1} / {questions.length}
-              </h2>
+            ) : (
+              <div className="max-w-3xl mx-auto">
+                {/* Question Header */}
+                <div className="text-center mb-6">
+                  <div className="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-2xl p-4 border-2 border-indigo-200 shadow-lg">
+                    <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      📝 {testType} | Soal {current + 1} / {questions.length}
+                    </h2>
+                  </div>
+                </div>
 
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-6 mb-6 border border-white/20">
-                <p className="text-center text-white text-base md:text-xl font-medium leading-relaxed">
-                  {questions[current]?.question}
-                </p>
-              </div>
+                {/* Question Card */}
+                <div className="bg-gradient-to-r from-cyan-50 via-blue-50 to-indigo-50 rounded-2xl p-6 md:p-8 mb-8 border-2 border-blue-200 shadow-inner relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full opacity-30 transform translate-x-8 -translate-y-8"></div>
+                  <div className="flex items-start relative z-10">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mr-4 shadow-lg flex-shrink-0 mt-1">
+                      <span className="text-white text-lg">❓</span>
+                    </div>
+                    <p className="text-gray-800 text-base md:text-xl font-medium leading-relaxed">
+                      {questions[current]?.question}
+                    </p>
+                  </div>
+                </div>
 
-              <div className="space-y-3 mb-6">
-                {questions[current]?.options.map((option) => (
-                  <label
-                    key={option.id}
-                    className={`flex cursor-pointer items-center rounded-xl border p-3 md:p-4 transition-all hover:scale-[1.01] ${
-                      selected === option.id
-                        ? "border-green-300 bg-white/20 shadow-lg"
-                        : "border-white/30 bg-white/5 hover:bg-white/10"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="answer"
-                      value={option.id}
-                      checked={selected === option.id}
-                      onChange={(e) => selectAnswer(e.target.value)}
-                      className="mr-3 md:mr-4 h-4 w-4 md:h-5 md:w-5 accent-green-400 flex-shrink-0"
-                    />
-                    <span className="text-white text-sm md:text-lg leading-relaxed">
-                      {option.text}
-                    </span>
-                  </label>
-                ))}
-              </div>
+                {/* Options Card */}
+                <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 rounded-2xl p-6 border-2 border-green-200 shadow-inner mb-8 relative overflow-hidden">
+                  <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-gradient-to-r from-green-200 to-teal-200 rounded-full opacity-30"></div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-4 text-center">
+                    📋 Pilihan Jawaban
+                  </h3>
+                  <div className="space-y-4 relative z-10">
+                    {questions[current]?.options.map((option, index) => (
+                      <label
+                        key={option.id}
+                        className={`group flex cursor-pointer items-center rounded-2xl border-3 p-4 md:p-5 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl ${
+                          selected === option.id
+                            ? "border-emerald-400 bg-gradient-to-r from-emerald-100 to-teal-100 shadow-emerald-400/40 ring-2 ring-emerald-300"
+                            : "border-white bg-gradient-to-r from-white to-gray-50 hover:from-emerald-50 hover:to-teal-50 hover:border-emerald-200"
+                        }`}
+                      >
+                        <div className="relative mr-4 flex-shrink-0">
+                          <input
+                            type="radio"
+                            name="answer"
+                            value={option.id}
+                            checked={selected === option.id}
+                            onChange={(e) => selectAnswer(e.target.value)}
+                            className="h-5 w-5 md:h-6 md:w-6 accent-emerald-500 cursor-pointer"
+                          />
+                          <div className="absolute inset-0 rounded-full border-2 border-emerald-300 opacity-0 group-hover:opacity-100 transition-opacity animate-ping"></div>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-3 shadow-lg">
+                            {String.fromCharCode(65 + index)}
+                          </span>
+                          <span className="text-gray-800 text-sm md:text-lg leading-relaxed font-medium">
+                            {option.text}
+                          </span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={previousQuestion}
-                  disabled={current === 0}
-                  className="flex-1 rounded-xl bg-gray-300 py-3 text-gray-700 font-semibold hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm md:text-base"
-                >
-                  ← Sebelumnya
-                </button>
-                <button
-                  onClick={nextQuestion}
-                  disabled={!selected}
-                  className="flex-1 rounded-xl bg-green-500 py-3 text-white font-semibold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm md:text-base"
-                >
-                  {current === questions.length - 1
-                    ? "Selesai ✓"
-                    : "Selanjutnya →"}
-                </button>
+                {/* Navigation Buttons */}
+                <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border-2 border-gray-200 shadow-inner">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                      onClick={previousQuestion}
+                      disabled={current === 0}
+                      className="flex-1 rounded-2xl bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 py-4 text-gray-700 font-bold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm md:text-base transform hover:scale-[1.02] border-2 border-gray-300 shadow-lg"
+                    >
+                      <div className="flex items-center justify-center">
+                        <span className="mr-2">←</span>
+                        Soal Sebelumnya
+                      </div>
+                    </button>
+                    <button
+                      onClick={nextQuestion}
+                      disabled={!selected}
+                      className="flex-1 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 py-4 text-white font-bold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm md:text-base transform hover:scale-[1.02] shadow-xl border-2 border-emerald-400"
+                    >
+                      <div className="flex items-center justify-center">
+                        <span className="mr-2">
+                          {current === questions.length - 1 ? "✓" : "→"}
+                        </span>
+                        {current === questions.length - 1
+                          ? "Selesai Test"
+                          : "Soal Selanjutnya"}
+                        <span className="ml-2">
+                          {current === questions.length - 1 ? "🎉" : "→"}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

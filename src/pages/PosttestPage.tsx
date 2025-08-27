@@ -5,74 +5,74 @@ const mockQuestions = [
   {
     id: 1,
     session: "posttest" as const,
-    question: "Termometer apa yang paling cocok digunakan untuk mengukur suhu di tempat yang sangat dingin, seperti di kutub?",
+    question: "Suatu termometer menunjukkan suhu 30°C, kemudian setelah diletakkan di bawah sinar matahari suhunya naik menjadi 40°C. Makna perubahan suhu tersebut dalam kehidupan sehari-hari adalah …",
     options: [
-      { id: "a", text: "Termometer Klinis" },
-      { id: "b", text: "Termometer Raksa" },
-      { id: "c", text: "Termometer Alkohol" },
-      { id: "d", text: "Termometer Digital" }
+      { id: "a", text: "Termometer mengeluarkan kalor sehingga suhunya naik" },
+      { id: "b", text: "Termometer menyerap energi panas dari lingkungan sehingga suhunya naik" },
+      { id: "c", text: "Termometer menghasilkan panas sendiri sehingga suhunya naik" },
+      { id: "d", text: "Suhu termometer tidak bergantung pada kalor dari luar" }
     ],
-    correct: "c"
+    correct: "b"
   },
   {
     id: 2,
     session: "posttest" as const,
-    question: "Suhu air mendidih adalah 100°C. Jika diukur dengan termometer Fahrenheit, berapa suhu itu?",
+    question: "Pada percobaan, sebuah batang besi dipanaskan sehingga panjangnya bertambah. Argumen utama yang benar mengenai peristiwa tersebut adalah …",
     options: [
-      { id: "a", text: "180° F" },
-      { id: "b", text: "200° F" },
-      { id: "c", text: "212° F" },
-      { id: "d", text: "250° F" }
+      { id: "a", text: "Batang besi bertambah panjang karena jumlah partikel bertambah" },
+      { id: "b", text: "Batang besi bertambah panjang karena partikel hilang saat dipanaskan" },
+      { id: "c", text: "Batang besi memuai karena partikel mendapat energi kalor, bergerak lebih cepat, dan jarak antarpartikel bertambah" },
+      { id: "d", text: "Batang besi memuai karena kalor mengubah zat besi menjadi zat baru" }
     ],
     correct: "c"
   },
   {
     id: 3,
     session: "posttest" as const,
-    question: "Sebuah benda menyerap kalor sebanyak 8.400 Joule. Massa benda 0,5 kg dan kalor jenisnya 420 J/kg°C. Berapa kenaikan suhu benda tersebut?",
+    question: "Dua benda, yaitu besi dan kaca, sama-sama dipanaskan dengan jumlah kalor yang sama. Besi tidak pecah, sedangkan kaca pecah. Alasan yang tepat adalah …",
     options: [
-      { id: "a", text: "10° C" },
-      { id: "b", text: "20° C" },
-      { id: "c", text: "30° C" },
-      { id: "d", text: "40° C" }
+      { id: "a", text: "Kaca memiliki kalor jenis lebih besar daripada besi" },
+      { id: "b", text: "Kaca lebih ringan dibandingkan besi" },
+      { id: "c", text: "Pemuaiannya tidak merata sehingga timbul tegangan pada kaca" },
+      { id: "d", text: "Kaca memiliki suhu awal lebih rendah dibanding besi" }
     ],
-    correct: "d"
+    correct: "c"
   },
   {
     id: 4,
     session: "posttest" as const,
-    question: "Seorang siswa memanaskan logam dan mencatat bahwa panjangnya bertambah 1,5 cm. Tapi menurut perhitungan, seharusnya hanya bertambah 1,0 cm. Apa yang sebaiknya dilakukan?",
+    question: "Argumen berikut: “Kaca lebih mudah pecah karena pemuaiannya tidak merata”. Penilaian logis terhadap argumen tersebut adalah …",
     options: [
-      { id: "a", text: "Mengganti Logam yang digunakan" },
-      { id: "b", text: "Menyesuaikan hasil supaya sesuai " },
-      { id: "c", text: "Mengecek kembali data dan perhitungannya" },
-      { id: "d", text: "Mengabaikan karena selisihnya kecil" }
+      { id: "a", text: "Tidak valid, karena kaca dan besi memuai secara sama" },
+      { id: "b", text: "Valid, karena kaca merupakan bahan rapuh dan pemuaiannya tidak merata" },
+      { id: "c", text: "Tidak valid, karena kaca lebih dingin dari besi" },
+      { id: "d", text: "Valid, karena kaca memiliki massa jenis lebih besar" }
     ],
-    correct: "c"
+    correct: "b"
   },
   {
     id: 5,
     session: "posttest" as const,
-    question: "Saat membuat laporan percobaan mengukur suhu air, apa yang sebaiknya ditulis lebih dulu?",
+    question: "Prinsip pemuaian dimanfaatkan dalam pemasangan rel kereta api dengan cara …",
     options: [
-      { id: "a", text: "Grafik Hasil Pengamatan" },
-      { id: "b", text: "Kesimpulan Akhir" },
-      { id: "c", text: "Tujuan percobaan" },
-      { id: "d", text: "Tabel suhu" }
+      { id: "a", text: "Membuat rel lebih panjang dari ukuran sebenarnya" },
+      { id: "b", text: "Memberi celah antarrel agar ada ruang untuk memuai" },
+      { id: "c", text: "Melapisi rel dengan kaca agar tidak memuai" },
+      { id: "d", text: "Menyiram rel dengan air agar suhunya tetap rendah" }
     ],
-    correct: "c"
+    correct: "b"
   },
   {
     id: 6,
     session: "posttest" as const,
-    question: "Kamu menghitung hasil pemuaian panjang logam dan hasilnya salah. Apa yang harus kamu lakukan?",
+    question: "Seorang siswa salah menafsirkan bahwa 'kalor sama dengan suhu.' Pemahaman yang benar adalah …",
     options: [
-      { id: "a", text: "Dibiarkan saja karena perbedaannya kecil" },
-      { id: "b", text: "Menyalin jawaban teman" },
-      { id: "c", text: "Mengecek kembali rumus dan langkah perhitungan" },
-      { id: "d", text: "Mengulang semua percobaan dari awal" }
+      { id: "a", text: "Suhu adalah energi panas, sedangkan kalor adalah derajat panas benda" },
+      { id: "b", text: "Suhu adalah ukuran derajat panas, sedangkan kalor adalah energi panas yang berpindah karena perbedaan suhu" },
+      { id: "c", text: "Suhu dan kalor sama, hanya berbeda satuan" },
+      { id: "d", text: "Kalor adalah jumlah zat dalam suatu benda, sedangkan suhu adalah energi panasnya" }
     ],
-    correct: "c"
+    correct: "b"
   }
 ];
 
